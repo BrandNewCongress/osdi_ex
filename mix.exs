@@ -24,6 +24,7 @@ defmodule Osdi.Mixfile do
     [
       {:postgrex, "~> 0.13.3"},
       {:ecto, "~> 2.2"},
+      {:poison, "~> 3.1"},
       {:stream_data, "~> 0.1", only: :test}
     ]
   end
