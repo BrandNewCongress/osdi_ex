@@ -14,7 +14,7 @@ defmodule Osdi.Mixfile do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :timex],
       mod: {Osdi.Application, []}
     ]
   end
@@ -25,6 +25,7 @@ defmodule Osdi.Mixfile do
       {:postgrex, "~> 0.13.3"},
       {:ecto, "~> 2.2"},
       {:poison, "~> 3.1"},
+      {:timex, "~> 3.0"},
       {:stream_data, "~> 0.1", only: :test}
     ]
   end

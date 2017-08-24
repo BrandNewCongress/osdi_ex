@@ -2,19 +2,41 @@
 
 Ecto models and schemas for the Open Supporter Data Interface, with some basic changesets
 
-## Installation
+## Progress for V1
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `osdi_ex` to your list of dependencies in `mix.exs`:
+### General Schema / Model Development
 
-```elixir
-def deps do
-  [
-    {:osdi_ex, "~> 0.1.0"}
-  ]
-end
-```
+- [x] Osdi.Person
+- [x] Osdi.Event
+- [x] Osdi.Donation
+- [x] Osdi.Tag
+- [ ] Osdi.Tagging
+- [ ] Osdi.Attendence
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/osdi_ex](https://hexdocs.pm/osdi_ex).
+Associations for:
+- [ ] People to events (organizier / host)
+- [ ] People to events (creator)
+- [ ] People to events (attendees)
+- [ ] Taggings to tags
+- [ ] Taggings to people
+- [ ] Donations to people
+
+## Helper methods
+
+- [ ] People
+  - [x] Osdi.People.signup_email
+  - [ ] Osdi.People.signup_phone
+  - [ ] Osdi.People.signup_multiple
+  - [ ] Osdi.People.match
+
+- [ ] Events
+  - [ ] Osdi.Event.create (creates person with host info if need be)
+
+- [ ] Donations
+  - [ ] Osdi.Donation.create (creates person for donation if need be)
+
+## Next
+
+- [ ] Petitions
+- [ ] Outreaches + Canvasses
+- [ ] Messages
