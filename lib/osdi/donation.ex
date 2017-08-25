@@ -17,7 +17,7 @@ defmodule Osdi.Donation do
     timestamps()
   end
 
-  def add(donation, params \\ %{}) do
+  def changeset(donation, params \\ %{}) do
     donation
     |> Ecto.Changeset.cast(params, [:origin_system, :action_date, :amount, :recipients, :referrer_data])
     |> Ecto.Changeset.put_assoc(:person, params.person)

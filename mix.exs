@@ -26,7 +26,8 @@ defmodule Osdi.Mixfile do
       {:ecto, "~> 2.2"},
       {:poison, "~> 3.1"},
       {:timex, "~> 3.0"},
-      {:stream_data, "~> 0.1", only: :test}
+      {:stream_data, "~> 0.1", only: :test},
+      {:shorter_maps, "~> 2.0"}
     ]
   end
 end

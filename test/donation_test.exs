@@ -1,4 +1,4 @@
-defmodule Donation do
+defmodule DonationTest do
   use ExUnit.Case
 
   test "direction donation creation" do
@@ -14,7 +14,7 @@ defmodule Donation do
       |> Enum.take(1)
       |> List.first()
 
-    new_donation = Osdi.Donation.add(donation, %{
+    new_donation = Osdi.Donation.changeset(donation, %{
       origin_system: "actblue", action_date: DateTime.utc_now(),
       amount: amount,
       recipients: [%{display_name: "Brand New Congress", legal_name: "Brand New Congress PAC", amount: amount}],
@@ -22,6 +22,6 @@ defmodule Donation do
       person: person
     })
 
-    assert {:ok, _person} = Osdi.Repo.insert(new_donation)
+    assert {:ok, _donation} = Osdi.Repo.insert(new_donation)
   end
 end

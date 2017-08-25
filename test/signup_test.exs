@@ -1,4 +1,4 @@
-defmodule Signup do
+defmodule SignupTest do
   use ExUnit.Case
 
   test "standard email signup" do
