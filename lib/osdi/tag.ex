@@ -1,8 +1,9 @@
 defmodule Osdi.Tag do
   use Ecto.Schema
 
-  schema "tags" do
-    field :item_type, :string
+  schema "tag" do
+    field :name, :string
     field :origin_system, :string
+    field :description, :string
   end
 end
