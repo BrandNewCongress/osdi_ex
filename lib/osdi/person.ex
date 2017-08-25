@@ -18,6 +18,7 @@ defmodule Osdi.Person do
     field :profiles, {:array, :map}
 
     has_many :donations, Osdi.Donation
+    has_many :attendances, Osdi.Attendance
 
     timestamps()
   end

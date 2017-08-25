@@ -20,6 +20,8 @@ defmodule Osdi.Event do
     has_one :organizer, Osdi.Person
     has_one :modified_by, Osdi.Person
 
+    has_many :attendances, Osdi.Attendance
+
     timestamps()
   end
 
