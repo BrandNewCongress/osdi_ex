@@ -13,5 +13,7 @@ defmodule Osdi.Event do
     field :start_date, :utc_datetime
     field :end_date, :utc_datetime
     field :calendar, :string
+
+    timestamps()
   end
 end

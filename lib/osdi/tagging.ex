@@ -4,5 +4,7 @@ defmodule Osdi.Tagging do
   schema "taggings" do
     field :item_type, :string
     field :origin_system, :string
+
+    timestamps()
   end
 end

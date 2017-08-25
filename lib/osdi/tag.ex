@@ -5,5 +5,7 @@ defmodule Osdi.Tag do
     field :name, :string
     field :origin_system, :string
     field :description, :string
+
+    timestamps()
   end
 end

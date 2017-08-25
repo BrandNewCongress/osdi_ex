@@ -17,6 +17,8 @@ defmodule Osdi.Person do
     field :phone_numbers, {:array, :map}
     field :profiles, {:array, :map}
 
+    has_many :donations, Osdi.Donation
+
     timestamps()
   end
 

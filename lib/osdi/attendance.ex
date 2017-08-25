@@ -1,4 +1,4 @@
-defmodule Osdi.Tag do
+defmodule Osdi.Attendance do
   use Ecto.Schema
 
   schema "attendance" do
@@ -7,5 +7,7 @@ defmodule Osdi.Tag do
     field :status, :string
     field :attended, :boolean
     field :referrer_data, :map
+
+    timestamps()
   end
 end
