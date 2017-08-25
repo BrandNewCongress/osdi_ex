@@ -6,6 +6,7 @@ defmodule Osdi.Repo.Migrations.CreateTaggings do
       add :name, :string
       add :origin_system, :string
       add :description, :string
+
       timestamps()
     end
   end

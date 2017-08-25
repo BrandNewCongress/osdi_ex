@@ -26,8 +26,6 @@ defmodule Osdi.Event do
   end
 
   def changeset(event, params \\ %{}) do
-    IO.inspect params
-
     event
     |> Ecto.Changeset.cast(params, @base_attrs)
     |> Ecto.Changeset.put_assoc(:creator, params.creator)

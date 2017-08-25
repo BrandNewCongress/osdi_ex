@@ -19,6 +19,7 @@ defmodule Osdi.Person do
 
     has_many :donations, Osdi.Donation
     has_many :attendances, Osdi.Attendance
+    has_many :taggings, Osdi.Tagging
 
     timestamps()
   end
