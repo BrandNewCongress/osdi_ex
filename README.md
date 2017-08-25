@@ -10,32 +10,36 @@ Ecto models and schemas for the Open Supporter Data Interface, with some basic c
 - [x] Osdi.Event
 - [x] Osdi.Donation
 - [x] Osdi.Tag
-- [ ] Osdi.Tagging
-- [ ] Osdi.Attendence
+- [x] Osdi.Tagging
+- [x] Osdi.Attendence
 
 Associations for:
-- [ ] People to events (organizier / host)
-- [ ] People to events (creator)
-- [ ] People to events (attendees)
-- [ ] Taggings to tags
-- [ ] Taggings to people
-- [ ] Donations to people
+- [x] People to events (organizier / host)
+- [x] People to events (creator)
+- [x] People to events (attendees)
+- [x] Taggings to tags
+- [x] Taggings to people
+- [x] Donations to people
 
-## Helper methods
-
-- [ ] People
-  - [x] Osdi.People.signup_email
-  - [ ] Osdi.People.signup_phone
-  - [ ] Osdi.People.signup_multiple
-  - [ ] Osdi.People.match
+Embedded structs for
 
 - [ ] Events
-  - [ ] Osdi.Event.create (creates person with host info if need be)
+  - [ ] Location
+  – [ ] Reminders
+
+- [ ] People
+  - [ ] Parties
+  - [ ] Address
+  - [ ] Email Address
+  - [ ] Phone Number
+  - [ ] Profiles
 
 - [ ] Donations
-  - [ ] Osdi.Donation.create (creates person for donation if need be)
+  - [ ] Referrer data
+  - [ ] Payment
+  - [ ] Recipient
 
-## Next
+## Next Models
 
 - [ ] Petitions
 - [ ] Outreaches + Canvasses
