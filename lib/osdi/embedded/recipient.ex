@@ -1,5 +1,6 @@
 defmodule Osdi.Recipient do
   use Ecto.Schema
+  import Ecto.Changeset
 
   embedded_schema do
     field :display_name, :string
@@ -9,6 +10,6 @@ defmodule Osdi.Recipient do
 
   def changeset(recipient, params \\ %{}) do
     recipient
-    |> Ecto.Changeset.cast(params, [:display_name, :legal_name, :amount])
+    |> cast(params, [:display_name, :legal_name, :amount])
   end
 end

@@ -1,5 +1,6 @@
 defmodule Osdi.Person do
   use Ecto.Schema
+  import Ecto.Changeset
 
   schema "people" do
     field :given_name, :string
@@ -29,9 +30,9 @@ defmodule Osdi.Person do
     params = format_email(person, params)
 
     person
-    |> Ecto.Changeset.cast(params, [:given_name, :family_name])
-    |> Ecto.Changeset.cast_embed(:email_addresses)
-    |> Ecto.Changeset.validate_required([:given_name, :family_name])
+    |> cast(params, [:given_name, :family_name])
+    |> cast_embed(:email_addresses)
+    |> validate_required([:given_name, :family_name])
   end
 
   defp format_email(%{email_addresses: nil}, params = %{email: email}) do
@@ -56,14 +57,14 @@ defmodule Osdi.Person do
 
   def changeset(person, params \\ %{}) do
     person
-    |> Ecto.Changeset.cast(params,
+    |> cast(params,
         [:given_name, :family_name, :honorific_prefix, :honorific_suffix,
          :gender, :birthdate, :languages_spoken, :party_identification])
-    |> Ecto.Changeset.cast_embed(:email_addresses)
-    |> Ecto.Changeset.cast_embed(:postal_addresses)
-    |> Ecto.Changeset.cast_embed(:phone_numbers)
-    |> Ecto.Changeset.cast_embed(:profiles)
-    |> Ecto.Changeset.cast_assoc(:taggings)
-    |> Ecto.Changeset.validate_required([:given_name, :family_name])
+    |> cast_embed(:email_addresses)
+    |> cast_embed(:postal_addresses)
+    |> cast_embed(:phone_numbers)
+    |> cast_embed(:profiles)
+    |> cast_assoc(:taggings)
+    |> validate_required([:given_name, :family_name])
   end
 end

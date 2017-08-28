@@ -1,5 +1,6 @@
 defmodule Osdi.Event do
   use Ecto.Schema
+  import Ecto.Changeset
 
   @base_attrs ~w(name title description summary browser_url type featured_image_url start_date end_date calendar)
 
@@ -28,9 +29,9 @@ defmodule Osdi.Event do
 
   def changeset(event, params \\ %{}) do
     event
-    |> Ecto.Changeset.cast(params, @base_attrs)
-    |> Ecto.Changeset.cast_embed(:location)
-    |> Ecto.Changeset.put_assoc(:creator, params.creator)
-    |> Ecto.Changeset.put_assoc(:organizer, params.organizer)
+    |> cast(params, @base_attrs)
+    |> cast_embed(:location)
+    |> put_assoc(:creator, params.creator)
+    |> put_assoc(:organizer, params.organizer)
   end
 end

@@ -1,5 +1,6 @@
 defmodule Osdi.Tagging do
   use Ecto.Schema
+  import Ecto.Changeset
 
   schema "taggings" do
     field :item_type, :string
@@ -13,8 +14,8 @@ defmodule Osdi.Tagging do
 
   def changeset(tagging, params \\ %{}) do
     tagging
-    |> Ecto.Changeset.cast(params, [:item_type, :origin_system])
-    |> Ecto.Changeset.put_assoc(:person, params.person)
-    |> Ecto.Changeset.put_assoc(:tag, params.tag)
+    |> cast(params, [:item_type, :origin_system])
+    |> put_assoc(:person, params.person)
+    |> put_assoc(:tag, params.tag)
   end
 end

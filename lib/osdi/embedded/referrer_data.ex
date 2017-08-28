@@ -1,5 +1,6 @@
 defmodule Osdi.ReferrerData do
   use Ecto.Schema
+  import Ecto.Changeset
 
   embedded_schema do
     field :source,	:string
@@ -10,6 +11,6 @@ defmodule Osdi.ReferrerData do
 
   def changeset(referrer_data, params \\ %{}) do
     referrer_data
-    |> Ecto.Changeset.cast(params, ~w(source referrer website url))
+    |> cast(params, ~w(source referrer website url))
   end
 end

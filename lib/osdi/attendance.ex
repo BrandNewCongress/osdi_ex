@@ -1,5 +1,6 @@
 defmodule Osdi.Attendance do
   use Ecto.Schema
+  import Ecto.Changeset
 
   schema "attendances" do
     field :origin_system, :string
@@ -17,9 +18,9 @@ defmodule Osdi.Attendance do
 
   def changeset(attendance, params \\ %{}) do
     attendance
-    |> Ecto.Changeset.cast(params, [:origin_system, :action_date, :status, :attended])
-    |> Ecto.Changeset.cast_embed(:referrer_data)
-    |> Ecto.Changeset.put_assoc(:person, params.person)
-    |> Ecto.Changeset.put_assoc(:event, params.event)
+    |> cast(params, [:origin_system, :action_date, :status, :attended])
+    |> cast_embed(:referrer_data)
+    |> put_assoc(:person, params.person)
+    |> put_assoc(:event, params.event)
   end
 end

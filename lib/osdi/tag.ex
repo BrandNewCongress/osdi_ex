@@ -1,5 +1,6 @@
 defmodule Osdi.Tag do
   use Ecto.Schema
+  import Ecto.Changeset
 
   schema "tags" do
     field :name, :string
@@ -13,8 +14,8 @@ defmodule Osdi.Tag do
 
   def changeset(tag, params \\ %{}) do
     tag
-    |> Ecto.Changeset.cast(params, [:name, :origin_system, :description])
-    |> Ecto.Changeset.unique_constraint(:name)
-    |> Ecto.Changeset.validate_required([:name])
+    |> cast(params, [:name, :origin_system, :description])
+    |> unique_constraint(:name)
+    |> validate_required([:name])
   end
 end

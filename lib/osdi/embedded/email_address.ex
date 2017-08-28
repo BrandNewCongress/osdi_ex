@@ -1,5 +1,6 @@
 defmodule Osdi.EmailAddress do
   use Ecto.Schema
+  import Ecto.Changeset
 
   embedded_schema do
     field :primary, :boolean
@@ -10,6 +11,6 @@ defmodule Osdi.EmailAddress do
 
   def changeset(email_address, params \\ %{}) do
     email_address
-    |> Ecto.Changeset.cast(params, [:primary, :address, :address_type, :status])
+    |> cast(params, [:primary, :address, :address_type, :status])
   end
 end

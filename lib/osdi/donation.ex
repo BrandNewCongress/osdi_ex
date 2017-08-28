@@ -1,5 +1,6 @@
 defmodule Osdi.Donation do
   use Ecto.Schema
+  import Ecto.Changeset
 
   schema "donations" do
     field :origin_system, :string
@@ -21,11 +22,11 @@ defmodule Osdi.Donation do
 
   def changeset(donation, params \\ %{}) do
     donation
-    |> Ecto.Changeset.cast(params, [:origin_system, :action_date, :amount])
-    |> Ecto.Changeset.cast_embed(:payment)
-    |> Ecto.Changeset.cast_embed(:recipients)
-    |> Ecto.Changeset.cast_embed(:referrer_data)
-    |> Ecto.Changeset.put_assoc(:person, params.person)
-    |> Ecto.Changeset.validate_required([:origin_system, :action_date, :amount, :recipients, :person])
+    |> cast(params, [:origin_system, :action_date, :amount])
+    |> cast_embed(:payment)
+    |> cast_embed(:recipients)
+    |> cast_embed(:referrer_data)
+    |> put_assoc(:person, params.person)
+    |> validate_required([:origin_system, :action_date, :amount, :recipients, :person])
   end
 end

@@ -1,8 +1,9 @@
 defmodule SignupTest do
   use ExUnit.Case
+  alias Osdi.{Person, Repo}
 
   test "standard email signup" do
-    person = %Osdi.Person{}
+    person = %Person{}
 
     [first_name, last_name, email_chunk] =
       :alphanumeric
@@ -10,15 +11,15 @@ defmodule SignupTest do
       |> Stream.filter(fn str -> String.length(str) > 5 end)
       |> Enum.take(3)
 
-    signup = Osdi.Person.signup_email(person,
+    signup = Person.signup_email(person,
       %{given_name: first_name, family_name: last_name,
         email: email_chunk <> "@comcast.edu"})
 
-    assert {:ok, _person} = Osdi.Repo.insert(signup)
+    assert {:ok, _person} = Repo.insert(signup)
   end
 
   test "second email signup" do
-    person = Osdi.Repo.all(Osdi.Person) |> List.first()
+    person = Repo.all(Person) |> List.first()
 
     %{given_name: first_name, family_name: last_name} = person
 
@@ -28,11 +29,11 @@ defmodule SignupTest do
       |> Stream.filter(fn str -> String.length(str) > 5 end)
       |> Enum.take(1)
 
-    signup = Osdi.Person.signup_email(person,
+    signup = Person.signup_email(person,
       %{given_name: first_name, family_name: last_name,
         email: email_chunk <> "@comcast.edu"})
 
-    assert {:ok, %Osdi.Person{email_addresses: more_than_one}} = Osdi.Repo.update(signup)
+    assert {:ok, %Person{email_addresses: more_than_one}} = Repo.update(signup)
     assert more_than_one |> length() > 1
   end
 end
