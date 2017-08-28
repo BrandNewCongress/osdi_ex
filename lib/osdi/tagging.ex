@@ -14,7 +14,7 @@ defmodule Osdi.Tagging do
   def changeset(tagging, params \\ %{}) do
     tagging
     |> Ecto.Changeset.cast(params, [:item_type, :origin_system])
-    |> Ecto.Changeset.cast_assoc(:person)
-    |> Ecto.Changeset.cast_assoc(:tag)
+    |> Ecto.Changeset.put_assoc(:person, params.person)
+    |> Ecto.Changeset.put_assoc(:tag, params.tag)
   end
 end
