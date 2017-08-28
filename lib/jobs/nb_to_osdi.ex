@@ -1,4 +1,6 @@
 defmodule Osdi.NbToOsdi do
+  alias Osdi.{Repo, Person}
+
   def go do
     {:ok, _agent} = Nb.start_link
     {:ok, _conn} = Redix.start_link(System.get_env("REDIS_URL"), name: :redix)
@@ -29,11 +31,11 @@ defmodule Osdi.NbToOsdi do
 
     IO.puts "Begging person #{person["id"]}"
 
-    query = from p in Osdi.Person, where: p.id == ^person["id"]
+    query = from p in Person, where: p.id == ^person["id"]
 
     existing =
-      case Osdi.Repo.one(query) do
-        nil -> %Osdi.Person{}
+      case Repo.one(query) do
+        nil -> %Person{}
         existing -> existing
       end
 
@@ -44,8 +46,8 @@ defmodule Osdi.NbToOsdi do
       |> Transformers.Nb.People.to_map()
 
     existing
-    |> Osdi.Person.changeset(params)
-    |> Osdi.Repo.insert()
+    |> Person.changeset(params)
+    |> Repo.insert()
     |> IO.inspect
   end
 
