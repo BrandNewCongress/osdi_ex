@@ -10,6 +10,14 @@ defmodule Osdi.PhoneNumber do
     field :operator, :string
     field :country, :string
     field :sms_capable, :boolean
-    field :do_not_call, :boolean	
+    field :do_not_call, :boolean
+  end
+
+  def changeset(email_address, params \\ %{}) do
+    email_address
+    |> Ecto.Changeset.cast(params, ~w(
+        primary number extension description
+        number_type operator country sms_capable do_not_call
+       )a)
   end
 end

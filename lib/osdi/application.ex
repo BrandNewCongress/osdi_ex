@@ -10,7 +10,7 @@ defmodule Osdi.Application do
 
     # List all child processes to be supervised
     children = [
-      Osdi.Repo,
+      Osdi.Repo
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

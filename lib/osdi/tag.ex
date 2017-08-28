@@ -14,6 +14,7 @@ defmodule Osdi.Tag do
   def changeset(tag, params \\ %{}) do
     tag
     |> Ecto.Changeset.cast(params, [:name, :origin_system, :description])
+    |> Ecto.Changeset.unique_constraint(:name)
     |> Ecto.Changeset.validate_required([:name])
   end
 end

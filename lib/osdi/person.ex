@@ -49,12 +49,21 @@ defmodule Osdi.Person do
       |> Enum.map(&Map.from_struct/1)
       |> Enum.concat([%{primary: true, address: email, status: "subscribed"}])
 
-    IO.puts ("\n\nhi")
-    IO.inspect new_eas
-    IO.inspect eas
-
     params
     |> Map.delete(:email)
     |> Map.put(:email_addresses, new_eas)
+  end
+
+  def changeset(person, params \\ %{}) do
+    person
+    |> Ecto.Changeset.cast(params,
+        [:given_name, :family_name, :honorific_prefix, :honorific_suffix,
+         :gender, :birthdate, :languages_spoken, :party_identification])
+    |> Ecto.Changeset.cast_embed(:email_addresses)
+    |> Ecto.Changeset.cast_embed(:postal_addresses)
+    |> Ecto.Changeset.cast_embed(:phone_numbers)
+    |> Ecto.Changeset.cast_embed(:profiles)
+    |> Ecto.Changeset.cast_assoc(:taggings)
+    |> Ecto.Changeset.validate_required([:given_name, :family_name])
   end
 end
