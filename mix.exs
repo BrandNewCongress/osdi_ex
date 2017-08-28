@@ -23,11 +23,12 @@ defmodule Osdi.Mixfile do
   defp deps do
     [
       {:postgrex, "~> 0.13.3"},
-      {:ecto, "~> 2.2"},
+      {:ecto, "~> 2.2", override: true},
       {:poison, "~> 3.1"},
       {:timex, "~> 3.0"},
       {:stream_data, "~> 0.1", only: :test},
-      {:shorter_maps, "~> 2.0"}
+      {:shorter_maps, "~> 2.0"},
+      {:ecto_enum, "~> 1.0.2", override: true}
     ]
   end
 end

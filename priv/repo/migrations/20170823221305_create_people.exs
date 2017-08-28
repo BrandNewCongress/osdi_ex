@@ -9,14 +9,14 @@ defmodule Osdi.Repo.Migrations.CreatePeople do
       add :honorific_prefix, :string
       add :honorific_suffix, :string
       add :gender, :string
-      add :birthdate, :map
+      add :birthdate, :date
       add :languages_spoken, {:array, :string}
       add :party_identification, :string
-      add :parties, {:array, :map}
-      add :postal_addresses, {:array, :map}
-      add :email_addresses, {:array, :map}
-      add :phone_numbers, {:array, :map}
-      add :profiles, {:array, :map}
+      add :parties, {:array, :map}, default: []
+      add :postal_addresses, {:array, :map}, default: []
+      add :email_addresses, {:array, :map}, default: []
+      add :phone_numbers, {:array, :map}, default: []
+      add :profiles, {:array, :map}, default: []
       timestamps()
     end
   end

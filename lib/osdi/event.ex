@@ -1,7 +1,7 @@
 defmodule Osdi.Event do
   use Ecto.Schema
 
-  @base_attrs ~w(name title description summary browser_url type location featured_image_url start_date end_date calendar)
+  @base_attrs ~w(name title description summary browser_url type featured_image_url start_date end_date calendar)
 
   schema "events" do
     field :name, :string
@@ -10,11 +10,12 @@ defmodule Osdi.Event do
     field :summary, :string
     field :browser_url, :string
     field :type, :string
-    field :location, :map
     field :featured_image_url, :string
     field :start_date, :utc_datetime
     field :end_date, :utc_datetime
     field :calendar, :string
+
+    embeds_one :location, Osdi.Address
 
     has_one :creator, Osdi.Person
     has_one :organizer, Osdi.Person
@@ -28,6 +29,7 @@ defmodule Osdi.Event do
   def changeset(event, params \\ %{}) do
     event
     |> Ecto.Changeset.cast(params, @base_attrs)
+    |> Ecto.Changeset.cast_embed(:location)
     |> Ecto.Changeset.put_assoc(:creator, params.creator)
     |> Ecto.Changeset.put_assoc(:organizer, params.organizer)
   end

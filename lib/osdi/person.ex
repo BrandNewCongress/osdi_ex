@@ -8,14 +8,15 @@ defmodule Osdi.Person do
     field :honorific_prefix, :string
     field :honorific_suffix, :string
     field :gender, :string
-    field :birthdate, :map
+    field :birthdate, :date
     field :languages_spoken, {:array, :string}
     field :party_identification, :string
-    field :parties, {:array, :map}
-    field :postal_addresses, {:array, :map}
-    field :email_addresses, {:array, :map}
-    field :phone_numbers, {:array, :map}
-    field :profiles, {:array, :map}
+
+    embeds_many :parties, Osdi.Party
+    embeds_many :postal_addresses, Osdi.Address
+    embeds_many :email_addresses, Osdi.EmailAddress
+    embeds_many :phone_numbers, Osdi.PhoneNumber
+    embeds_many :profiles, Osdi.Profile
 
     has_many :donations, Osdi.Donation
     has_many :attendances, Osdi.Attendance
@@ -28,8 +29,9 @@ defmodule Osdi.Person do
     params = format_email(person, params)
 
     person
-    |> Ecto.Changeset.cast(params, [:given_name, :family_name, :email_addresses])
-    |> Ecto.Changeset.validate_required([:given_name, :family_name, :email_addresses])
+    |> Ecto.Changeset.cast(params, [:given_name, :family_name])
+    |> Ecto.Changeset.cast_embed(:email_addresses)
+    |> Ecto.Changeset.validate_required([:given_name, :family_name])
   end
 
   defp format_email(%{email_addresses: nil}, params = %{email: email}) do
@@ -43,8 +45,13 @@ defmodule Osdi.Person do
   defp format_email(%{email_addresses: eas}, params = %{email: email}) do
     new_eas =
       eas
-      |> Enum.filter(fn %{"address" => address} -> address != email end)
+      |> Enum.filter(fn %{address: address} -> address != email end)
+      |> Enum.map(&Map.from_struct/1)
       |> Enum.concat([%{primary: true, address: email, status: "subscribed"}])
+
+    IO.puts ("\n\nhi")
+    IO.inspect new_eas
+    IO.inspect eas
 
     params
     |> Map.delete(:email)

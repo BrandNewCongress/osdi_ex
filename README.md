@@ -1,6 +1,6 @@
 # osdi_ex
 
-Ecto models and schemas for the Open Supporter Data Interface, with some basic changesets
+Ecto.Schemas and schemas for the Open Supporter Data Interface, with some basic changesets
 
 ## Progress for V1
 
@@ -25,7 +25,7 @@ Embedded structs for
 
 - [ ] Events
   - [ ] Location
-  – [ ] Reminders
+  - [ ] Reminders
 
 - [ ] People
   - [ ] Parties

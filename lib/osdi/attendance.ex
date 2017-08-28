@@ -6,7 +6,8 @@ defmodule Osdi.Attendance do
     field :action_date, :utc_datetime
     field :status, :string
     field :attended, :boolean
-    field :referrer_data, :map
+
+    embeds_one :referrer_data, Osdi.ReferrerData
 
     belongs_to :person, Osdi.Person
     belongs_to :event, Osdi.Event
@@ -16,7 +17,8 @@ defmodule Osdi.Attendance do
 
   def changeset(attendance, params \\ %{}) do
     attendance
-    |> Ecto.Changeset.cast(params, [:origin_system, :action_date, :status, :attended, :referrer_data])
+    |> Ecto.Changeset.cast(params, [:origin_system, :action_date, :status, :attended])
+    |> Ecto.Changeset.cast_embed(:referrer_data)
     |> Ecto.Changeset.put_assoc(:person, params.person)
     |> Ecto.Changeset.put_assoc(:event, params.event)
   end
