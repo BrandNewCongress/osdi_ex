@@ -3,9 +3,8 @@ defmodule Osdi.Repo.Migrations.CreateTaggings do
 
   def change do
     create table(:taggings) do
-      add :name, :string
       add :origin_system, :string
-      add :description, :string
+      add :item_type, :string
 
       timestamps()
     end

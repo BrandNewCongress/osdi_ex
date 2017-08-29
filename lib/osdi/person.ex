@@ -1,6 +1,8 @@
 defmodule Osdi.Person do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Osdi.{Repo}
+  import Ecto.Query
 
   schema "people" do
     field :given_name, :string
@@ -66,5 +68,30 @@ defmodule Osdi.Person do
     |> cast_embed(:profiles)
     |> cast_assoc(:taggings)
     |> validate_required([:given_name, :family_name])
+  end
+
+  def match(person, params \\ %{}) do
+    Repo.one from p in Osdi.Person,
+      where: p.email_addresses
+  end
+
+  def add_tags(person = %Osdi.Person{id: id}, tags) do
+    tagging_structs =
+      tags
+      |> Enum.map(&Osdi.Tag.ensure/1)
+      |> Enum.map(&(%{person_id: person.id, tag_id: &1.id, item_type: "person",
+                      inserted_at: Ecto.DateTime.utc(), updated_at: Ecto.DateTime.utc()}))
+
+    {_n, taggings} = Repo.insert_all(Osdi.Tagging, tagging_structs, returning: true)
+    person
+  end
+
+  def add_tags(id, tags) do
+    case Repo.one(from p in Osdi.Person, where: p.id == ^id, preload: :taggings) do
+      nil ->
+        {:error, :not_found}
+      p = %Osdi.Person{} ->
+        add_tags(p, tags)
+    end
   end
 end

@@ -29,8 +29,6 @@ defmodule Osdi.NbToOsdi do
   defp sync_person(person) do
     import Ecto.Query, only: [from: 2]
 
-    IO.puts "Begging person #{person["id"]}"
-
     query = from p in Person, where: p.id == ^person["id"]
 
     existing =
