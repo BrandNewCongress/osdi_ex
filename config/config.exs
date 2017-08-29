@@ -7,7 +7,8 @@ config :osdi, Osdi.Repo,
   database: "osdi_repo",
   username: "postgres",
   password: "postgres",
-  hostname: "localhost"
+  hostname: "localhost",
+  extensions: [{Geo.PostGIS.Extension, library: Geo}]
 
 config :osdi, ecto_repos: [Osdi.Repo]
 

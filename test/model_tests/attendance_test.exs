@@ -15,8 +15,8 @@ defmodule AttendanceTest do
     status = "confirmed"
     attended = false
 
-    new_rsvp = Attendance.changeset(attendance, ~M(origin_system,
-      action_date, status, attended, event, person
+    new_rsvp = Attendance.changeset(attendance, ~M(
+      origin_system, action_date, status, attended, event, person
     ))
 
     {:ok, _rsvp} = Repo.insert(new_rsvp)

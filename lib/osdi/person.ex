@@ -4,6 +4,11 @@ defmodule Osdi.Person do
   alias Osdi.{Repo}
   import Ecto.Query
 
+  @base_attrs ~w(
+    given_name family_name honorific_prefix honorific_suffix
+    gender birthdate languages_spoken party_identification
+  )a
+
   schema "people" do
     field :given_name, :string
     field :family_name, :string
@@ -16,73 +21,38 @@ defmodule Osdi.Person do
     field :party_identification, :string
 
     embeds_many :parties, Osdi.Party
-    embeds_many :postal_addresses, Osdi.Address
-    embeds_many :email_addresses, Osdi.EmailAddress
-    embeds_many :phone_numbers, Osdi.PhoneNumber
     embeds_many :profiles, Osdi.Profile
 
     has_many :donations, Osdi.Donation
     has_many :attendances, Osdi.Attendance
-    has_many :taggings, Osdi.Tagging
+
+    many_to_many :phone_numbers, Osdi.PhoneNumber, join_through: "people_phones", on_replace: :delete
+    many_to_many :email_addresses, Osdi.EmailAddress, join_through: "people_emails", on_replace: :delete
+    many_to_many :postal_addresses, Osdi.Address, join_through: "people_addresses", on_replace: :delete
+    many_to_many :tags, Osdi.Tag, join_through: Osdi.Tagging, on_replace: :delete
 
     timestamps()
   end
 
-  def signup_email(person, params \\ %{}) do
-    params = format_email(person, params)
-
-    person
-    |> cast(params, [:given_name, :family_name])
-    |> cast_embed(:email_addresses)
-    |> validate_required([:given_name, :family_name])
-  end
-
-  defp format_email(%{email_addresses: nil}, params = %{email: email}) do
-    new_eas = [%{primary: true, address: email, status: "subscribed"}]
-
-    params
-    |> Map.delete(:email)
-    |> Map.put(:email_addresses, new_eas)
-  end
-
-  defp format_email(%{email_addresses: eas}, params = %{email: email}) do
-    new_eas =
-      eas
-      |> Enum.filter(fn %{address: address} -> address != email end)
-      |> Enum.map(&Map.from_struct/1)
-      |> Enum.concat([%{primary: true, address: email, status: "subscribed"}])
-
-    params
-    |> Map.delete(:email)
-    |> Map.put(:email_addresses, new_eas)
-  end
-
   def changeset(person, params \\ %{}) do
     person
-    |> cast(params,
-        [:given_name, :family_name, :honorific_prefix, :honorific_suffix,
-         :gender, :birthdate, :languages_spoken, :party_identification])
-    |> cast_embed(:email_addresses)
-    |> cast_embed(:postal_addresses)
-    |> cast_embed(:phone_numbers)
+    |> cast(params, @base_attrs)
     |> cast_embed(:profiles)
-    |> cast_assoc(:taggings)
+    |> cast_assoc(:tags)
+    |> cast_assoc(:email_addresses)
+    |> cast_assoc(:phone_numbers)
+    |> cast_assoc(:postal_addresses)
     |> validate_required([:given_name, :family_name])
-  end
-
-  def match(person, params \\ %{}) do
-    Repo.one from p in Osdi.Person,
-      where: p.email_addresses
   end
 
   def add_tags(person = %Osdi.Person{id: id}, tags) do
     tagging_structs =
       tags
       |> Enum.map(&Osdi.Tag.ensure/1)
-      |> Enum.map(&(%{person_id: person.id, tag_id: &1.id, item_type: "person",
+      |> Enum.map(&(%{person_id: id, tag_id: &1.id, item_type: "person",
                       inserted_at: Ecto.DateTime.utc(), updated_at: Ecto.DateTime.utc()}))
 
-    {_n, taggings} = Repo.insert_all(Osdi.Tagging, tagging_structs, returning: true)
+    {_n, _taggings} = Repo.insert_all(Osdi.Tagging, tagging_structs, returning: true)
     person
   end
 

@@ -26,7 +26,7 @@ defmodule Osdi.Mixfile do
       {:ecto, "~> 2.2", override: true},
       {:poison, "~> 3.1"},
       {:timex, "~> 3.0"},
-      {:stream_data, "~> 0.1", only: :test},
+      {:faker, "~> 0.8"},
       {:shorter_maps, "~> 2.0"},
       {:ecto_enum, "~> 1.0.2", override: true},
       {:nb, git: "https://github.com/BrandNewCongress/nb_ex.git", app: false},
@@ -34,7 +34,8 @@ defmodule Osdi.Mixfile do
       {:remodel, "~> 0.0.4"},
       {:parallel_stream, "~> 1.0.5"},
       {:plug, "~> 1.0"},
-       {:redix, ">= 0.0.0"}
+      {:redix, ">= 0.0.0"},
+      {:geo, "~> 1.0"}
     ]
   end
 end

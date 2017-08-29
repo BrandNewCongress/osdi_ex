@@ -6,14 +6,9 @@ defmodule DonationTest do
     person = Repo.all(Person) |> Enum.take(1) |> List.first()
     donation = %Donation{}
 
-    amount = StreamData.integer(1..200) |> Enum.take(1) |> List.first()
+    amount = Faker.Commerce.price()
 
-    ref_source =
-      :alphanumeric
-      |> StreamData.string()
-      |> Stream.filter(fn str -> String.length(str) > 2 end)
-      |> Enum.take(1)
-      |> List.first()
+    ref_source = Faker.Code.isbn()
 
     new_donation = Donation.changeset(donation, %{
       origin_system: "actblue", action_date: DateTime.utc_now(),

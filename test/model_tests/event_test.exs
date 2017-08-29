@@ -9,10 +9,8 @@ defmodule EventTest do
     event = %Event{}
 
     [name, title, description, summary, browser_url, type, featured_image_url] =
-      :alphanumeric
-      |> StreamData.string()
-      |> Stream.filter(fn str -> String.length(str) > 2 end)
-      |> Enum.take(7)
+      [Faker.Beer.name(), Faker.Beer.style(), Faker.Beer.yeast(), Faker.Beer.malt(),
+       Faker.Internet.url(), Faker.Company.bs(), Faker.Internet.url()]
 
     start_date = DateTime.utc_now() |> Timex.shift(days: 4)
     end_date = DateTime.utc_now() |> Timex.shift(days: 4, hours: 4)
