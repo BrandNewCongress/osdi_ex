@@ -1,7 +1,7 @@
 defmodule Osdi.Person do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Osdi.{Repo}
+  alias Osdi.{Repo, PhoneNumber, EmailAddress}
   import Ecto.Query
 
   @base_attrs ~w(
@@ -45,23 +45,46 @@ defmodule Osdi.Person do
     |> validate_required([:given_name, :family_name])
   end
 
-  def add_tags(person = %Osdi.Person{id: id}, tags) do
-    tagging_structs =
-      tags
-      |> Enum.map(&Osdi.Tag.ensure/1)
-      |> Enum.map(&(%{person_id: id, tag_id: &1.id, item_type: "person",
-                      inserted_at: Ecto.DateTime.utc(), updated_at: Ecto.DateTime.utc()}))
+  def match(person, params \\ %{}) do
+    phone_result = case person[:phone_number] do
+      nil -> []
+      number ->
+        (from pn in PhoneNumber, where: pn.number == ^number)
+        |> Repo.one()
+        |> Repo.preload(:people)
+    end
 
-    {_n, _taggings} = Repo.insert_all(Osdi.Tagging, tagging_structs, returning: true)
-    person
-  end
+    phone_possibilities = case phone_result do
+      %{people: people} -> people |> Enum.map(&(&1.id))
+      _ -> []
+    end
 
-  def add_tags(id, tags) do
-    case Repo.one(from p in Osdi.Person, where: p.id == ^id, preload: :taggings) do
-      nil ->
-        {:error, :not_found}
-      p = %Osdi.Person{} ->
-        add_tags(p, tags)
+    email_result = case person[:email_address] do
+      nil -> []
+      address ->
+        (from em in EmailAddress, where: em.address == ^address)
+        |> Repo.one()
+        |> Repo.preload(:people)
+    end
+
+    email_possibilities = case email_result do
+      %{people: people} -> people |> Enum.map(&(&1.id))
+      _ -> []
+    end
+
+    all_ids = phone_possibilities ++ email_possibilities
+
+    chosen =
+      all_ids
+      |> Enum.into(MapSet.new())
+      |> Enum.map(fn id -> {id, Enum.count(all_ids, &(&1 == id))} end)
+      |> Enum.concat([{10,3}])
+      |> Enum.sort(fn ({_, c1}, {_, c2}) -> c1 >= c2 end)
+      |> List.first()
+
+    case chosen do
+      {_count, id} -> Repo.get(Osdi.Person, id)
+      nil -> nil
     end
   end
 end

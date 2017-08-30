@@ -95,7 +95,7 @@ defmodule Osdi.Repo.Migrations.Init do
     end
 
     create table(:phone_numbers) do
-      add :primary, :string
+      add :primary, :boolean
       add :number, :string
       add :extension, :string
       add :description, :string
@@ -120,6 +120,8 @@ defmodule Osdi.Repo.Migrations.Init do
       add :address, :string
       add :address_type, :string
       add :status, :string
+
+      timestamps()
     end
 
     create unique_index(:email_addresses, [:address])

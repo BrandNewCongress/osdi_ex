@@ -1,26 +1,25 @@
-defmodule Osdi.NbToOsdi do
+defmodule Jobs.NbToOsdi do
   alias Osdi.{Repo, Person}
 
   def go do
     {:ok, _agent} = Nb.start_link
     {:ok, _conn} = Redix.start_link(System.get_env("REDIS_URL"), name: :redix)
 
-    last_sync = get_since() |> IO.inspect |> DateTime.to_iso8601()
+    last_sync = get_since() |> DateTime.to_iso8601()
     next_sync = DateTime.utc_now()
 
     start = Time.utc_now()
 
     "people"
     |> Nb.Api.stream([query: %{updated_since: last_sync}])
-    |> ParallelStream.map(&sync_person/1, num_workers: 4, worker_work_ratio: 1)
-    |> Enum.take(1)
+    |> ParallelStream.map(&sync_person/1, num_workers: 1, worker_work_ratio: 1)
+    |> Enum.take(10)
     |> Enum.to_list()
 
     set_since(next_sync)
 
     done = Time.utc_now()
     IO.inspect Time.diff(done, start, :microsecond)
-
   end
 
   defp to_atom_map(map) when is_map(map), do: Map.new(map, fn {k, v} -> {String.to_atom(k), to_atom_map(v)} end)
@@ -28,6 +27,9 @@ defmodule Osdi.NbToOsdi do
 
   defp sync_person(person) do
     import Ecto.Query, only: [from: 2]
+
+    # TODO - use People.match
+    # TODO - add emails and phones, don't replace
 
     query = from p in Person, where: p.id == ^person["id"]
 

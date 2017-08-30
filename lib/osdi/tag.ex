@@ -26,7 +26,7 @@ defmodule Osdi.Tag do
   def get_or_insert(name) do
     Repo.insert! %Osdi.Tag{name: name},
       on_conflict: [set: [name: name]],
-      conflict_target: name
+      conflict_target: :name
   end
 
   def get_or_insert_all(name_list) do

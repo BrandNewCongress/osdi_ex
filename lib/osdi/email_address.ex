@@ -11,11 +11,14 @@ defmodule Osdi.EmailAddress do
     field :address_type, :string
     field :status, :string
 
-    belongs_to :person, Osdi.Person
+    many_to_many :people, Osdi.Person, join_through: "people_emails"
+
+    timestamps()
   end
 
   def changeset(email_address, params \\ %{}) do
     email_address
+    |> unique_constraint(:address)
     |> cast(params, @base_attrs)
   end
 
@@ -23,7 +26,7 @@ defmodule Osdi.EmailAddress do
     Osdi.EmailAddress
     |> struct(email_address)
     |> Repo.insert!(
-        on_conflict: [set: [primary: email_address.primary, status: email_address.status]],
-        conflict_target: [:primary, :status])
+        on_conflict: [set: [address: email_address.address]],
+        conflict_target: :address)
   end
 end
