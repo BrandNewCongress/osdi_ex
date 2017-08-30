@@ -14,7 +14,7 @@ defmodule Osdi.Mixfile do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :timex, :httpotion],
+      extra_applications: [:logger, :timex],
       mod: {Osdi.Application, []}
     ]
   end
@@ -29,7 +29,6 @@ defmodule Osdi.Mixfile do
       {:faker, "~> 0.8"},
       {:shorter_maps, "~> 2.0"},
       {:ecto_enum, "~> 1.0.2", override: true},
-      {:nb, git: "https://github.com/BrandNewCongress/nb_ex.git", app: false},
       {:apex, "~>1.0.0"},
       {:remodel, "~> 0.0.4"},
       {:parallel_stream, "~> 1.0.5"},
