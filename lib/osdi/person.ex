@@ -43,9 +43,10 @@ defmodule Osdi.Person do
       |> cast_embed(:profiles)
 
 
-    changeset =
-      ~w(tags email_addresses phone_numbers postal_addresses)a
-      |> Enum.reduce({changeset, params}, &association_reduce/2)
+    {changeset, _} = Enum.reduce(
+      ~w(tags email_addresses phone_numbers postal_addresses)a,
+      {changeset, params},
+      &association_reduce/2)
 
     changeset
     |> validate_required([:given_name, :family_name])
@@ -56,7 +57,7 @@ defmodule Osdi.Person do
       nil -> changeset
       [%{__struct__: _} | _] -> {put_assoc(changeset, assoc, params[assoc]), params}
       [%{} | _] -> {cast_assoc(changeset, assoc), params}
-      [] -> changeset
+      [] -> {changeset, params}
     end
   end
 
