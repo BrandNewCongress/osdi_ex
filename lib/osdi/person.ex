@@ -37,14 +37,27 @@ defmodule Osdi.Person do
   end
 
   def changeset(person, params \\ %{}) do
-    person
-    |> cast(params, @base_attrs)
-    |> cast_embed(:profiles)
-    |> put_assoc(:tags, params.tags)
-    |> put_assoc(:email_addresses, params.email_addresses)
-    |> put_assoc(:phone_numbers, params.phone_numbers)
-    |> put_assoc(:postal_addresses, params.postal_addresses)
+    changeset =
+      person
+      |> cast(params, @base_attrs)
+      |> cast_embed(:profiles)
+
+
+    changeset =
+      ~w(tags email_addresses phone_numbers postal_addresses)a
+      |> Enum.reduce({changeset, params}, &association_reduce/2)
+
+    changeset
     |> validate_required([:given_name, :family_name])
+  end
+
+  defp association_reduce(assoc, {changeset, params}) do
+    case params[assoc] do
+      nil -> changeset
+      [%{__struct__: _} | _] -> {put_assoc(changeset, assoc, params[assoc]), params}
+      [%{} | _] -> {cast_assoc(changeset, assoc), params}
+      [] -> changeset
+    end
   end
 
   def match(person = %Osdi.Person{}) do
