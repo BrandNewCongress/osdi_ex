@@ -23,6 +23,10 @@ defmodule Osdi.Tag do
     |> validate_required([:name])
   end
 
+  def get_or_insert(tag = %{name: name}) do
+    get_or_insert(name)
+  end
+
   def get_or_insert(name) do
     Repo.insert! %Osdi.Tag{name: name},
       on_conflict: [set: [name: name]],

@@ -49,4 +49,17 @@ defmodule SignupTest do
     assert length(pushed.email_addresses) == 2
     assert length(pushed.phone_numbers) == 1
   end
+
+  test "raw insert" do
+    assert %Person{} = Person.push(%{additional_name: nil, attendances: nil, birthdate: nil,
+      email_addresses: [%{address: "heidiwjackson@gmail.com", primary: true,
+         status: "subscribed"}], family_name: "", gender: nil, given_name: "",
+      honorific_prefix: nil, honorific_suffix: nil, languages_spoken: [],
+      parties: nil, party_identification: nil,
+      phone_numbers: [%{do_not_call: false, number: "9176573355",
+         number_type: "Home", primary: false, sms_capable: false}],
+      postal_addresses: [], profiles: [],
+      taggings: [%{created_at: "2017-08-31T09:26:12-04:00",
+         tag: %{name: "Action: Joined Website: Justice Democrats"}}]})
+  end
 end

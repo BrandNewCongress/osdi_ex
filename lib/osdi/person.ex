@@ -1,7 +1,7 @@
 defmodule Osdi.Person do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Osdi.{Repo, PhoneNumber, EmailAddress}
+  alias Osdi.{Repo, PhoneNumber, EmailAddress, Tag}
   import Ecto.Query
 
   @base_attrs ~w(
@@ -37,28 +37,29 @@ defmodule Osdi.Person do
   end
 
   def changeset(person, params \\ %{}) do
-    changeset =
-      person
-      |> cast(params, @base_attrs)
-      |> cast_embed(:profiles)
-
-
-    {changeset, _} = Enum.reduce(
-      ~w(tags email_addresses phone_numbers postal_addresses)a,
-      {changeset, params},
+    params = Enum.reduce(
+      [{:email_address, EmailAddress}, {:phone_numbers, PhoneNumber},
+       {:postal_addresses, PostalAddress}],
+      params,
       &association_reduce/2)
 
-    changeset
-    |> validate_required([:given_name, :family_name])
+    person
+    |> cast(params, @base_attrs)
+    |> cast_embed(:profiles)
+    |> put_assoc(:email_addresses, params.email_addresses)
+    |> put_assoc(:phone_numbers, params.phone_numbers)
+    |> put_assoc(:postal_addresses, params.postal_addresses)
   end
 
-  defp association_reduce(assoc, {changeset, params}) do
-    case params[assoc] do
-      nil -> {changeset, params}
-      [%{__struct__: _} | _] -> {put_assoc(changeset, assoc, params[assoc]), params}
-      [%{} | _] -> {cast_assoc(changeset, assoc), params}
-      [] -> {changeset, params}
+  defp association_reduce({assoc, model}, params) do
+    new_els = case params[assoc] do
+      nil -> params[assoc]
+      [%model{} | _] -> params[assoc]
+      [%{} | _] -> params[assoc] |> Enum.map(&model.get_or_insert/1)
+      [] -> params[assoc]
     end
+
+    Map.put(params, :assoc, new_els)
   end
 
   def match(person = %Osdi.Person{}) do
@@ -124,13 +125,13 @@ defmodule Osdi.Person do
     case match(person) do
       # No match found
       nil ->
-        as_struct = case person do
-          %{__struct__: _} -> person
-          %{} -> struct(Osdi.Person, person)
+        as_map = case person do
+          %{__struct__: _} -> person |> Map.from_struct()
+          %{} -> person
         end
 
         %Osdi.Person{}
-        |> changeset(person)
+        |> changeset(as_map)
         |> Repo.insert!()
 
       # Match chosen
