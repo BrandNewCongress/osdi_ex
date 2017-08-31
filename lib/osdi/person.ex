@@ -54,7 +54,7 @@ defmodule Osdi.Person do
 
   defp association_reduce(assoc, {changeset, params}) do
     case params[assoc] do
-      nil -> changeset
+      nil -> {changeset, params}
       [%{__struct__: _} | _] -> {put_assoc(changeset, assoc, params[assoc]), params}
       [%{} | _] -> {cast_assoc(changeset, assoc), params}
       [] -> {changeset, params}
