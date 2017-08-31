@@ -46,20 +46,25 @@ defmodule Osdi.Person do
     person
     |> cast(params, @base_attrs)
     |> cast_embed(:profiles)
-    |> put_assoc(:email_addresses, params.email_addresses)
-    |> put_assoc(:phone_numbers, params.phone_numbers)
-    |> put_assoc(:postal_addresses, params.postal_addresses)
+    |> x_assoc(:email_addresses, params.email_addresses)
+    |> x_assoc(:phone_numbers, params.phone_numbers)
+    |> x_assoc(:postal_addresses, params.postal_addresses)
   end
 
   defp association_reduce({assoc, model}, params) do
     new_els = case params[assoc] do
       nil -> params[assoc]
-      [%model{} | _] -> params[assoc]
+      [%model{} | _] -> params[assoc] |> Enum.map(&model.get_or_insert/1)
       [%{} | _] -> params[assoc] |> Enum.map(&model.get_or_insert/1)
       [] -> params[assoc]
     end
 
-    Map.put(params, :assoc, new_els)
+    Map.put(params, assoc, new_els)
+  end
+
+  defp x_assoc(changeset, key, els) do
+    changeset
+    |> put_assoc(key, els)
   end
 
   def match(person = %Osdi.Person{}) do
