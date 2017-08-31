@@ -60,7 +60,7 @@ defmodule Osdi.Person do
       |> (fn numbers -> from pn in PhoneNumber, where: pn.number in ^numbers end).()
       |> Repo.one()
       |> Repo.preload(:people)
-      |> (fn %{people: people} -> people |> Enum.map(&(&1.id)) end).()
+      |> people_ids()
 
     email_possibilities =
       person
@@ -68,7 +68,7 @@ defmodule Osdi.Person do
       |> (fn emails -> from em in EmailAddress, where: em.address in ^emails end).()
       |> Repo.one()
       |> Repo.preload(:people)
-      |> (fn %{people: people} -> people |> Enum.map(&(&1.id)) end).()
+      |> people_ids()
 
     all_ids = phone_possibilities ++ email_possibilities
 
@@ -89,6 +89,8 @@ defmodule Osdi.Person do
     end
   end
 
+  defp people_ids(%{people: people}), do: people |> Enum.map(&(&1.id))
+  defp people_ids(nil), do: []
   defp get_numbers(%{phone_number: number}), do: [number]
   defp get_numbers(%{phone_numbers: number_structs}), do: number_structs |> Enum.map(&(&1.number))
   defp get_emails(%{email_address: address}), do: [address]
