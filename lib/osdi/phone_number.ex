@@ -29,11 +29,23 @@ defmodule Osdi.PhoneNumber do
     |> cast(params, @base_attrs)
   end
 
+  def get_or_insert(phone_number = %Osdi.PhoneNumber{}) do
+    phone_number
+    |> Map.take(@base_attrs)
+    |> (fn pn -> struct(Osdi.PhoneNumber, pn) end).()
+    |> Repo.insert!(
+      on_conflict: [set:
+        phone_number
+        |> Map.from_struct()
+        |> Map.take(~w(do_not_call sms_capable)a)
+        |> Enum.into([])
+      ],
+      conflict_target: :number)
+  end
+
   def get_or_insert(phone_number) do
     Osdi.PhoneNumber
     |> struct(phone_number)
-    |> Repo.insert!(
-        on_conflict: [set: Enum.into(phone_number, [])],
-        conflict_target: :number)
+    |> get_or_insert()
   end
 end

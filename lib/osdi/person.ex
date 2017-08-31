@@ -9,6 +9,8 @@ defmodule Osdi.Person do
     gender birthdate languages_spoken party_identification
   )a
 
+  @associations ~w(phone_numbers email_addresses postal_addresses tags)a
+
   schema "people" do
     field :given_name, :string
     field :family_name, :string
@@ -38,39 +40,35 @@ defmodule Osdi.Person do
     person
     |> cast(params, @base_attrs)
     |> cast_embed(:profiles)
-    |> cast_assoc(:tags)
-    |> cast_assoc(:email_addresses)
-    |> cast_assoc(:phone_numbers)
-    |> cast_assoc(:postal_addresses)
+    |> put_assoc(:tags, params.tags)
+    |> put_assoc(:email_addresses, params.email_addresses)
+    |> put_assoc(:phone_numbers, params.phone_numbers)
+    |> put_assoc(:postal_addresses, params.postal_addresses)
     |> validate_required([:given_name, :family_name])
   end
 
-  def match(person, params \\ %{}) do
-    phone_result = case person[:phone_number] do
-      nil -> []
-      number ->
-        (from pn in PhoneNumber, where: pn.number == ^number)
-        |> Repo.one()
-        |> Repo.preload(:people)
-    end
+  def match(person = %Osdi.Person{}) do
+    person
+    |> Map.from_struct()
+    |> match()
+  end
 
-    phone_possibilities = case phone_result do
-      %{people: people} -> people |> Enum.map(&(&1.id))
-      _ -> []
-    end
+  def match(person) do
+    phone_possibilities =
+      person
+      |> get_numbers()
+      |> (fn numbers -> from pn in PhoneNumber, where: pn.number in ^numbers end).()
+      |> Repo.one()
+      |> Repo.preload(:people)
+      |> (fn %{people: people} -> people |> Enum.map(&(&1.id)) end).()
 
-    email_result = case person[:email_address] do
-      nil -> []
-      address ->
-        (from em in EmailAddress, where: em.address == ^address)
-        |> Repo.one()
-        |> Repo.preload(:people)
-    end
-
-    email_possibilities = case email_result do
-      %{people: people} -> people |> Enum.map(&(&1.id))
-      _ -> []
-    end
+    email_possibilities =
+      person
+      |> get_emails()
+      |> (fn emails -> from em in EmailAddress, where: em.address in ^emails end).()
+      |> Repo.one()
+      |> Repo.preload(:people)
+      |> (fn %{people: people} -> people |> Enum.map(&(&1.id)) end).()
 
     all_ids = phone_possibilities ++ email_possibilities
 
@@ -78,13 +76,71 @@ defmodule Osdi.Person do
       all_ids
       |> Enum.into(MapSet.new())
       |> Enum.map(fn id -> {id, Enum.count(all_ids, &(&1 == id))} end)
-      |> Enum.concat([{10,3}])
       |> Enum.sort(fn ({_, c1}, {_, c2}) -> c1 >= c2 end)
       |> List.first()
 
     case chosen do
-      {_count, id} -> Repo.get(Osdi.Person, id)
+      {id, _count} ->
+        (from p in Osdi.Person, where: p.id == ^id)
+        |> Repo.one()
+        |> Repo.preload([:phone_numbers, :email_addresses])
+
       nil -> nil
+    end
+  end
+
+  defp get_numbers(%{phone_number: number}), do: [number]
+  defp get_numbers(%{phone_numbers: number_structs}), do: number_structs |> Enum.map(&(&1.number))
+  defp get_emails(%{email_address: address}), do: [address]
+  defp get_emails(%{email_addresses: address_structs}), do: address_structs |> Enum.map(&(&1.address))
+
+  @doc """
+  Matches person and joins email addresses and phone numbers
+  Overwrites name and all other simple person fields
+  """
+  def push(person = %Osdi.Person{}) do
+    person
+    |> Map.from_struct()
+    |> push()
+  end
+
+  def push(person) do
+    case match(person) do
+      nil -> Repo.insert!(person)
+
+      %Osdi.Person{id: id} ->
+        existing =
+          (from p in Osdi.Person, where: p.id == ^id)
+          |> Repo.one()
+          |> Repo.preload(@associations)
+
+        new_emails =
+          (person[:email_addresses] || [])
+          |> Enum.map(&EmailAddress.get_or_insert/1)
+          |> Enum.concat(existing.email_addresses)
+          |> Enum.uniq_by(&(&1.address))
+
+        new_phones =
+          (person[:phone_numbers] || [])
+          |> Enum.map(&PhoneNumber.get_or_insert/1)
+          |> Enum.concat(existing.phone_numbers)
+          |> Enum.uniq_by(&(&1.number))
+
+        params =
+          existing
+          |> Map.put(:email_addresses, new_emails)
+          |> Map.put(:phone_numbers, new_phones)
+          |> Map.from_struct()
+          |> Map.take(@base_attrs ++ @associations)
+
+        %{id: id} =
+          existing
+          |> changeset(params)
+          |> Repo.update!()
+
+        (from p in Osdi.Person, where: p.id == ^id)
+        |> Repo.one()
+        |> Repo.preload([:phone_numbers, :email_addresses])
     end
   end
 end
