@@ -121,8 +121,18 @@ defmodule Osdi.Person do
 
   def push(person) do
     case match(person) do
-      nil -> Repo.insert!(person)
+      # No match found
+      nil ->
+        as_struct = case person do
+          %{__struct__: _} -> person
+          %{} -> struct(Osdi.Person, person)
+        end
 
+        %Osdi.Person{}
+        |> changeset(person)
+        |> Repo.insert!()
+
+      # Match chosen
       %Osdi.Person{id: id} ->
         existing =
           (from p in Osdi.Person, where: p.id == ^id)
