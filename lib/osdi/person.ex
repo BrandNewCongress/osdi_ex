@@ -146,23 +146,13 @@ defmodule Osdi.Person do
           |> Repo.one()
           |> Repo.preload(@associations)
 
-        new_emails =
-          (person[:email_addresses] || [])
-          |> Enum.map(&EmailAddress.get_or_insert/1)
-          |> Enum.concat(existing.email_addresses)
-          |> Enum.uniq_by(&(&1.address))
-
-        new_phones =
-          (person[:phone_numbers] || [])
-          |> Enum.map(&PhoneNumber.get_or_insert/1)
-          |> Enum.concat(existing.phone_numbers)
-          |> Enum.uniq_by(&(&1.number))
-
         params =
-          existing
-          |> Map.put(:email_addresses, new_emails)
-          |> Map.put(:phone_numbers, new_phones)
-          |> Map.from_struct()
+          [{:email_addresses, EmailAddress, &(&1.address)},
+           {:phone_numbers, PhoneNumber, &(&1.number)}]
+           {:tags, Tag, &(&1.name)},
+           {:postal_addresses, Address, &(&1.address_lines |> List.first())}]
+          |> Enum.map(generate_combiner(person, existing))
+          |> Enum.reduce(existing, fn ({key, val}, acc) -> Map.put(acc, key, val) end)
           |> Map.take(@base_attrs ++ @associations)
 
         %{id: id} =
@@ -173,6 +163,18 @@ defmodule Osdi.Person do
         (from p in Osdi.Person, where: p.id == ^id)
         |> Repo.one()
         |> Repo.preload([:phone_numbers, :email_addresses])
+    end
+  end
+
+  defp generate_combiner(person, existing) do
+    fn {key, module, uniquer} ->
+      combined =
+        (person[key] || [])
+        |> Enum.map(&module.get_or_insert/1)
+        |> Enum.concat(Map.get(existing, key))
+        |> Enum.uniq_by(uniquer)
+
+      {key, combined}
     end
   end
 end

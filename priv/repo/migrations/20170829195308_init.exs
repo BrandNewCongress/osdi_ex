@@ -94,6 +94,11 @@ defmodule Osdi.Repo.Migrations.Init do
       timestamps()
     end
 
+    create table(:event_taggings) do
+      add :event_id, references(:events)
+      add :tag_id, references(:tags)
+    end
+
     create table(:phone_numbers) do
       add :primary, :boolean
       add :number, :string

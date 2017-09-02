@@ -24,6 +24,7 @@ defmodule Osdi.Event do
     has_one :modified_by, Osdi.Person
 
     has_many :attendances, Osdi.Attendance
+    many_to_many :tags, Osdi.Tag, join_through: "event_taggings", on_replace: :delete
     belongs_to :location, Osdi.Address, foreign_key: :address_id
 
     timestamps()
