@@ -154,7 +154,7 @@ defmodule Osdi.Person do
           #  {:postal_addresses, Address, &(&1.address_lines |> List.first())}]
           |> Enum.map(generate_combiner(person, existing))
           |> Enum.reduce(existing, fn ({key, val}, acc) -> Map.put(acc, key, val) end)
-          |> Map.put(:identifiers, combine_identifiers(params[:identifiers], existing.identifiers))
+          |> Map.put(:identifiers, combine_identifiers(person[:identifiers], existing.identifiers))
           |> Map.take(@base_attrs ++ @associations)
 
         %{id: id} =
