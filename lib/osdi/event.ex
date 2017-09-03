@@ -20,9 +20,9 @@ defmodule Osdi.Event do
     field :start_date, :utc_datetime
     field :end_date, :utc_datetime
 
-    has_one :creator, Osdi.Person
-    has_one :organizer, Osdi.Person
-    has_one :modified_by, Osdi.Person
+    belongs_to :creator, Osdi.Person
+    belongs_to :organizer, Osdi.Person
+    belongs_to :modified_by, Osdi.Person
 
     has_many :attendances, Osdi.Attendance
     many_to_many :tags, Osdi.Tag, join_through: "event_taggings", on_replace: :delete

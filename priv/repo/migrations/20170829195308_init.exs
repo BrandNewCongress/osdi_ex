@@ -32,9 +32,9 @@ defmodule Osdi.Repo.Migrations.Init do
       add :start_date, :utc_datetime
       add :end_date, :utc_datetime
 
-      add :creator, references(:people)
-      add :organizer, references(:people)
-      add :modified_by, references(:people)
+      add :creator_id, references(:people)
+      add :organizer_id, references(:people)
+      add :modified_by_id, references(:people)
 
       timestamps()
     end
