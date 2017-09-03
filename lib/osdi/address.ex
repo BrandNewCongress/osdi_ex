@@ -7,6 +7,9 @@ defmodule Osdi.Address do
     status time_zone location
   )a
 
+  @associations ~w()
+
+  @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "addresses" do
     field :venue, :string
     field :address_lines, {:array, :string}

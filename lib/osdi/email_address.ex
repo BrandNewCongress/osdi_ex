@@ -4,7 +4,9 @@ defmodule Osdi.EmailAddress do
   alias Osdi.{Repo}
 
   @base_attrs ~w(primary address address_type status)a
+  @associations ~w(people)
 
+  @derive {Poison.Encoder, only: @base_attrs}
   schema "email_addresses" do
     field :primary, :boolean
     field :address, :string

@@ -8,6 +8,7 @@ defmodule Osdi.PhoneNumber do
     country sms_capable do_not_call
   )a
 
+  @derive {Poison.Encoder, only: @base_attrs}
   schema "phone_numbers" do
     field :primary, :boolean
     field :number, :string

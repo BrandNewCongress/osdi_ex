@@ -3,7 +3,9 @@ defmodule Osdi.Donation do
   import Ecto.Changeset
 
   @base_attrs ~w(origin_system action_date amount voided voided_date url)
+  @associations ~w(payment referrer_data recipients person)
 
+  @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "donations" do
     field :identifiers, {:array, :string}
     field :origin_system, :string

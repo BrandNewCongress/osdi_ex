@@ -8,6 +8,11 @@ defmodule Osdi.Event do
     featured_image_url start_date end_date
   )
 
+  @associations ~w(
+    creator organizer modified_by location
+  )
+
+  @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "events" do
     field :identifiers, {:array, :string}
     field :name, :string
@@ -23,10 +28,10 @@ defmodule Osdi.Event do
     belongs_to :creator, Osdi.Person
     belongs_to :organizer, Osdi.Person
     belongs_to :modified_by, Osdi.Person
+    belongs_to :location, Osdi.Address, foreign_key: :address_id
 
     has_many :attendances, Osdi.Attendance
     many_to_many :tags, Osdi.Tag, join_through: "event_taggings", on_replace: :delete
-    belongs_to :location, Osdi.Address, foreign_key: :address_id
 
     timestamps()
   end

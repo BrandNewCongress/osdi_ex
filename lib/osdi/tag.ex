@@ -6,6 +6,7 @@ defmodule Osdi.Tag do
 
   @base_attrs ~w(name origin_system description)
 
+  @derive {Poison.Encoder, only: @base_attrs}
   schema "tags" do
     field :name, :string
     field :origin_system, :string
