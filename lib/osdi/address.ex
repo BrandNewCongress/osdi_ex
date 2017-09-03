@@ -16,7 +16,9 @@ defmodule Osdi.Address do
     field :country, :string, default: "United States of America"
     field :status, :string
     field :time_zone, :string
-    # field :location, Geo.Point
+    field :location, Geo.Point
+
+    timestamps()
   end
 
   def changeset(address, params \\ %{}) do

@@ -41,8 +41,6 @@ defmodule Osdi.Event do
   end
 
   def add_tags(event = %Osdi.Event{tags: current_tags}, tags) when is_list(current_tags) do
-    IO.inspect event
-
     current_tagstrings = current_tags |> Enum.map(&(&1.name))
 
     records =
@@ -50,14 +48,12 @@ defmodule Osdi.Event do
       |> Enum.concat(current_tagstrings)
       |> Tag.get_or_insert_all()
 
-    IO.inspect records
-
     event
     |> change(tags: records)
     |> Repo.update!()
   end
 
-  def add_tags(event = %Osdi.Event{id: id}, tags) do
+  def add_tags(_event = %Osdi.Event{id: id}, tags) do
     Osdi.Event
     |> Repo.get(id)
     |> Repo.preload(:tags)

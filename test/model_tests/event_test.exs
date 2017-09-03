@@ -17,9 +17,11 @@ defmodule EventTest do
 
     tags = ~w(one two three)
 
+    location = %{}
+
     new_event = Event.changeset(event, ~M(name, title, description, summary,
       browser_url, type, featured_image_url, start_date, end_date, organizer,
-      creator, tags
+      creator, tags, location
     ))
 
     Repo.insert!(new_event)
