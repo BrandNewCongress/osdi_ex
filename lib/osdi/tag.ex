@@ -33,10 +33,16 @@ defmodule Osdi.Tag do
       conflict_target: :name
   end
 
-  def get_or_insert_all(name_list) do
-    as_maps = Enum.map name_list, &(%{name: &1, inserted_at: Timex.now(), updated_at: Timex.now()})
-    Repo.insert_all Osdi.Tag, as_maps, on_conflict: :nothing
-    Repo.all from t in Osdi.Tag, where: t.name in ^name_list
+  def get_or_insert_all(tags) do
+    if tags |> List.first() |> is_binary() do
+      as_maps = Enum.map tags, &(%{name: &1, inserted_at: Timex.now(), updated_at: Timex.now()})
+      Repo.insert_all Osdi.Tag, as_maps, on_conflict: :nothing
+      Repo.all from t in Osdi.Tag, where: t.name in ^tags
+    else
+      name_list = Enum.map tags, &(&1.name)
+      Repo.insert_all Osdi.Tag, tags, on_conflict: :nothing
+      Repo.all from t in Osdi.Tag, where: t.name in ^name_list
+    end
   end
 
   def ensure(tag_string) do

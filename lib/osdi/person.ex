@@ -148,9 +148,9 @@ defmodule Osdi.Person do
 
         params =
           [{:email_addresses, EmailAddress, &(&1.address)},
-           {:phone_numbers, PhoneNumber, &(&1.number)}]
-           {:tags, Tag, &(&1.name)},
-           {:postal_addresses, Address, &(&1.address_lines |> List.first())}]
+           {:phone_numbers, PhoneNumber, &(&1.number)},
+           {:tags, Tag, &(&1.name)}]
+          #  {:postal_addresses, Address, &(&1.address_lines |> List.first())}]
           |> Enum.map(generate_combiner(person, existing))
           |> Enum.reduce(existing, fn ({key, val}, acc) -> Map.put(acc, key, val) end)
           |> Map.take(@base_attrs ++ @associations)
