@@ -5,7 +5,7 @@ defmodule Osdi.Event do
 
   @base_attrs ~w(
     name title description summary browser_url type
-    featured_image_url start_date end_date calendar
+    featured_image_url start_date end_date
   )
 
   schema "events" do
@@ -18,7 +18,6 @@ defmodule Osdi.Event do
     field :featured_image_url, :string
     field :start_date, :utc_datetime
     field :end_date, :utc_datetime
-    field :calendar, :string
 
     has_one :creator, Osdi.Person
     has_one :organizer, Osdi.Person

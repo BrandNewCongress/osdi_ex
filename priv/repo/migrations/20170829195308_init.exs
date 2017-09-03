@@ -29,7 +29,6 @@ defmodule Osdi.Repo.Migrations.Init do
       add :featured_image_url, :string
       add :start_date, :utc_datetime
       add :end_date, :utc_datetime
-      add :calendar, :string
 
       add :creator, references(:people)
       add :organizer, references(:people)
