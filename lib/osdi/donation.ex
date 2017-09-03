@@ -5,6 +5,7 @@ defmodule Osdi.Donation do
   @base_attrs ~w(origin_system action_date amount voided voided_date url)
 
   schema "donations" do
+    field :identifiers, {:array, :string}
     field :origin_system, :string
     field :action_date, :utc_datetime
     field :amount, :float

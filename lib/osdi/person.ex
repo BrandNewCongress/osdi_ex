@@ -12,6 +12,7 @@ defmodule Osdi.Person do
   @associations ~w(phone_numbers email_addresses postal_addresses tags)a
 
   schema "people" do
+    field :identifiers, {:array, :string}
     field :given_name, :string
     field :family_name, :string
     field :additional_name, :string
@@ -153,6 +154,7 @@ defmodule Osdi.Person do
           #  {:postal_addresses, Address, &(&1.address_lines |> List.first())}]
           |> Enum.map(generate_combiner(person, existing))
           |> Enum.reduce(existing, fn ({key, val}, acc) -> Map.put(acc, key, val) end)
+          |> Map.put(:identifiers, combine_identifiers(params[:identifiers], existing.identifiers))
           |> Map.take(@base_attrs ++ @associations)
 
         %{id: id} =
@@ -176,5 +178,12 @@ defmodule Osdi.Person do
 
       {key, combined}
     end
+  end
+
+  defp combine_identifiers(list_a, list_b) do
+    (list_a || [])
+    |> Enum.concat(list_b || [])
+    |> Enum.into(MapSet.new())
+    |> Enum.to_list()
   end
 end

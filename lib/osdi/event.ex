@@ -9,6 +9,7 @@ defmodule Osdi.Event do
   )
 
   schema "events" do
+    field :identifiers, {:array, :string}
     field :name, :string
     field :title, :string
     field :description, :string

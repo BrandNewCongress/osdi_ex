@@ -103,7 +103,6 @@ defmodule Osdi.Repo.Migrations.Init do
     end
 
     create table(:phone_numbers) do
-      add :identifiers, {:array, :string}
       add :primary, :boolean
       add :number, :string
       add :extension, :string
@@ -125,7 +124,6 @@ defmodule Osdi.Repo.Migrations.Init do
     end
 
     create table(:email_addresses) do
-      add :identifiers, {:array, :string}
       add :primary, :boolean
       add :address, :string
       add :address_type, :string
@@ -142,7 +140,6 @@ defmodule Osdi.Repo.Migrations.Init do
     end
 
     create table(:attendances) do
-      add :identifiers, {:array, :string}
       add :origin_system, :string
       add :action_date, :utc_datetime
       add :status, :string
