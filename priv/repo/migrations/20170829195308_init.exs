@@ -3,6 +3,7 @@ defmodule Osdi.Repo.Migrations.Init do
 
   def change do
     create table(:people) do
+      add :identifiers, {:array, :string}
       add :given_name, :string
       add :family_name, :string
       add :additional_name, :string
@@ -19,6 +20,7 @@ defmodule Osdi.Repo.Migrations.Init do
     end
 
     create table(:events) do
+      add :identifiers, {:array, :string}
       add :name, :string
       add :title, :string
       add :description, :string
@@ -61,6 +63,7 @@ defmodule Osdi.Repo.Migrations.Init do
     end
 
     create table(:donations) do
+      add :identifiers, {:array, :string}
       add :origin_system, :string
       add :action_date, :utc_datetime
       add :amount, :float
@@ -77,6 +80,7 @@ defmodule Osdi.Repo.Migrations.Init do
     end
 
     create table(:tags) do
+      add :identifiers, {:array, :string}
       add :name, :string, unique: true
       add :origin_system, :string
       add :description, :string
@@ -99,6 +103,7 @@ defmodule Osdi.Repo.Migrations.Init do
     end
 
     create table(:phone_numbers) do
+      add :identifiers, {:array, :string}
       add :primary, :boolean
       add :number, :string
       add :extension, :string
@@ -120,6 +125,7 @@ defmodule Osdi.Repo.Migrations.Init do
     end
 
     create table(:email_addresses) do
+      add :identifiers, {:array, :string}
       add :primary, :boolean
       add :address, :string
       add :address_type, :string
@@ -136,6 +142,7 @@ defmodule Osdi.Repo.Migrations.Init do
     end
 
     create table(:attendances) do
+      add :identifiers, {:array, :string}
       add :origin_system, :string
       add :action_date, :utc_datetime
       add :status, :string
