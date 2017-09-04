@@ -51,7 +51,7 @@ defmodule EventTest do
   test "add tags four, five, six" do
     %Event{id: id} =
       create_fake_event()
-      |> Event.add_tags(~w(four, five, six))
+      |> Event.add_tags(~w(four five six))
 
     new_tags =
       Event
