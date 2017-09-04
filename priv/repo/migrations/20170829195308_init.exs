@@ -23,8 +23,8 @@ defmodule Osdi.Repo.Migrations.Init do
       add :identifiers, {:array, :string}
       add :name, :string
       add :title, :string
-      add :description, :string
-      add :summary, :string
+      add :description, :text
+      add :summary, :text
       add :browser_url, :string
       add :type, :string
       add :location, :map
@@ -83,7 +83,7 @@ defmodule Osdi.Repo.Migrations.Init do
       add :identifiers, {:array, :string}
       add :name, :string, unique: true
       add :origin_system, :string
-      add :description, :string
+      add :description, :text
 
       timestamps()
     end
