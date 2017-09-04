@@ -3,7 +3,7 @@ defmodule Osdi.Attendance do
   import Ecto.Changeset
 
   @base_attrs ~w(origin_system action_date status attended)a
-  @associations ~w(person event)
+  @associations ~w(person event)a
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "attendances" do

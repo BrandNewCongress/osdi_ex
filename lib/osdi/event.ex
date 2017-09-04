@@ -6,11 +6,11 @@ defmodule Osdi.Event do
   @base_attrs ~w(
     name title description summary browser_url type
     featured_image_url start_date end_date
-  )
+  )a
 
   @associations ~w(
-    creator organizer modified_by location
-  )
+    creator organizer modified_by location tags
+  )a
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "events" do

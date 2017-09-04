@@ -11,6 +11,6 @@ defmodule Osdi.ReferrerData do
 
   def changeset(referrer_data, params \\ %{}) do
     referrer_data
-    |> cast(params, ~w(source referrer website url))
+    |> cast(params, ~w(source referrer website url)a)
   end
 end

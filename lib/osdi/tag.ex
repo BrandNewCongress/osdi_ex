@@ -4,7 +4,7 @@ defmodule Osdi.Tag do
   import Ecto.Query
   alias Osdi.{Repo}
 
-  @base_attrs ~w(name origin_system description)
+  @base_attrs ~w(name origin_system description)a
 
   @derive {Poison.Encoder, only: @base_attrs}
   schema "tags" do
@@ -24,7 +24,7 @@ defmodule Osdi.Tag do
     |> validate_required([:name])
   end
 
-  def get_or_insert(tag = %{name: name}) do
+  def get_or_insert(_tag = %{name: name}) do
     get_or_insert(name)
   end
 

@@ -7,7 +7,7 @@ defmodule Osdi.Address do
     status time_zone location
   )a
 
-  @associations ~w()
+  @associations ~w()a
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "addresses" do

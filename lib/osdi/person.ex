@@ -11,6 +11,7 @@ defmodule Osdi.Person do
 
   @associations ~w(phone_numbers email_addresses postal_addresses tags)a
 
+  @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "people" do
     field :identifiers, {:array, :string}
     field :given_name, :string
