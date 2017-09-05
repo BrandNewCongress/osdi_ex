@@ -3,7 +3,7 @@ defmodule Osdi.Address do
   import Ecto.Changeset
 
   @base_attrs ~w(
-    venue address_lines location region postal_code country
+    venue address_lines location locality region postal_code country
     status time_zone location
   )a
 
