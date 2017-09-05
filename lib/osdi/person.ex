@@ -81,8 +81,9 @@ defmodule Osdi.Person do
       |> get_numbers()
       |> Enum.reject(&(&1 == ""))
       |> (fn numbers -> from pn in PhoneNumber, where: pn.number in ^numbers end).()
-      |> Repo.one()
+      |> Repo.all()
       |> Repo.preload(:people)
+      |> Enum.to_list()
       |> people_ids()
 
     email_possibilities =
@@ -90,8 +91,9 @@ defmodule Osdi.Person do
       |> get_emails()
       |> Enum.reject(&(&1 == ""))
       |> (fn emails -> from em in EmailAddress, where: em.address in ^emails end).()
-      |> Repo.one()
+      |> Repo.all()
       |> Repo.preload(:people)
+      |> Enum.to_list()
       |> people_ids()
 
     all_ids = phone_possibilities ++ email_possibilities
@@ -103,6 +105,8 @@ defmodule Osdi.Person do
       |> Enum.sort(fn ({_, c1}, {_, c2}) -> c1 >= c2 end)
       |> List.first()
 
+    IO.inspect chosen
+
     case chosen do
       {id, _count} ->
         (from p in Osdi.Person, where: p.id == ^id)
@@ -113,8 +117,14 @@ defmodule Osdi.Person do
     end
   end
 
+  defp people_ids([]), do: []
+  defp people_ids(people_list = [%{} | _]), do:
+    people_list
+    |> Enum.flat_map(fn %{people: people} -> people |> Enum.map(&(&1.id)) end)
+
   defp people_ids(%{people: people}), do: people |> Enum.map(&(&1.id))
   defp people_ids(nil), do: []
+
   defp get_numbers(%{phone_number: number}), do: [number]
   defp get_numbers(%{phone_numbers: number_structs}), do: number_structs |> Enum.map(&(&1.number))
   defp get_emails(%{email_address: address}), do: [address]
