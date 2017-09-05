@@ -24,14 +24,23 @@ defmodule Osdi.Address do
     timestamps()
   end
 
-  def encode_model(address = %{location: {x, y}}) do
+  def encode_model(address = %Osdi.Address{location: %Geo.Point{coordinates: {x, y}}}) do
     %Osdi.Address{address | location: [x, y]}
   end
+  #
+  # def encode_model(address) do
+  #   IO.inspect address.location
+  #   # %Osdi.Address{address | location: [0, 0]}
+  # end
+
 
   defimpl Poison.Encoder, for: Osdi.Address do
     def encode(address, options) do
-      address = Osdi.Address.encode_model(address)
-      Poison.Encoder.Map.encode(Map.take(address, @base_attrs), options)
+      address
+      |> Osdi.Address.encode_model()
+      |> Map.take(~w(venue address_lines location region postal_code country status time_zone location)a)
+      |> IO.inspect
+      |> Poison.Encoder.Map.encode(options)
     end
   end
 
