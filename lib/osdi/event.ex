@@ -5,7 +5,7 @@ defmodule Osdi.Event do
 
   @base_attrs ~w(
     name title description summary browser_url type
-    featured_image_url start_date end_date
+    featured_image_url start_date end_date status
   )a
 
   @associations ~w(
@@ -21,6 +21,7 @@ defmodule Osdi.Event do
     field :summary, :string
     field :browser_url, :string
     field :type, :string
+    field :status, :string
     field :featured_image_url, :string
     field :start_date, :utc_datetime
     field :end_date, :utc_datetime

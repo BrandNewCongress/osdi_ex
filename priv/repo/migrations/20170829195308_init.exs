@@ -27,6 +27,7 @@ defmodule Osdi.Repo.Migrations.Init do
       add :summary, :text
       add :browser_url, :string
       add :type, :string
+      add :status, :string
       add :location, :map
       add :featured_image_url, :string
       add :start_date, :utc_datetime
