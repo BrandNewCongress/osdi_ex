@@ -105,8 +105,6 @@ defmodule Osdi.Person do
       |> Enum.sort(fn ({_, c1}, {_, c2}) -> c1 >= c2 end)
       |> List.first()
 
-    IO.inspect chosen
-
     case chosen do
       {id, _count} ->
         (from p in Osdi.Person, where: p.id == ^id)

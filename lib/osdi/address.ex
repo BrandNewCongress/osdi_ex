@@ -37,7 +37,6 @@ defmodule Osdi.Address do
       address
       |> Osdi.Address.encode_model()
       |> Map.take(~w(venue address_lines location region postal_code country status time_zone location)a)
-      |> IO.inspect
       |> Poison.Encoder.Map.encode(options)
     end
   end
