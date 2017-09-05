@@ -79,6 +79,7 @@ defmodule Osdi.Person do
     phone_possibilities =
       person
       |> get_numbers()
+      |> Enum.reject(&(&1 == ""))
       |> (fn numbers -> from pn in PhoneNumber, where: pn.number in ^numbers end).()
       |> Repo.one()
       |> Repo.preload(:people)
@@ -87,6 +88,7 @@ defmodule Osdi.Person do
     email_possibilities =
       person
       |> get_emails()
+      |> Enum.reject(&(&1 == ""))
       |> (fn emails -> from em in EmailAddress, where: em.address in ^emails end).()
       |> Repo.one()
       |> Repo.preload(:people)
