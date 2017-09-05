@@ -27,12 +27,10 @@ defmodule Osdi.Address do
   def encode_model(address = %Osdi.Address{location: %Geo.Point{coordinates: {x, y}}}) do
     %Osdi.Address{address | location: [x, y]}
   end
-  #
-  # def encode_model(address) do
-  #   IO.inspect address.location
-  #   # %Osdi.Address{address | location: [0, 0]}
-  # end
 
+  def encode_model(address) do
+    address
+  end
 
   defimpl Poison.Encoder, for: Osdi.Address do
     def encode(address, options) do
