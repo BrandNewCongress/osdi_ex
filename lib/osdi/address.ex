@@ -24,6 +24,17 @@ defmodule Osdi.Address do
     timestamps()
   end
 
+  def encode_model(address = %{location: {x, y}}) do
+    %Osdi.Address{address | location: [x, y]}
+  end
+
+  defimpl Poison.Encoder, for: Osdi.Address do
+    def encode(address, options) do
+      address = Osdi.Address.encode_model(address)
+      Poison.Encoder.Map.encode(Map.take(address, @base_attrs), options)
+    end
+  end
+
   def changeset(address, params \\ %{}) do
     address
     |> cast(params, @base_attrs)
