@@ -40,9 +40,11 @@ defmodule Osdi.Person do
 
   defimpl Poison.Encoder, for: Osdi.Person do
     def encode(person, options) do
-      person
-      |> Map.take(@base_attrs ++ @associations)
-      |> Enum.reject(fn {key, value} -> Ecto.assoc_loaded?(value) end)
+      p = person
+      |> Map.from_struct()
+      |> Enum.reject(fn {key, value} -> not Ecto.assoc_loaded?(value) end)
+      |> Map.new()
+      |> Map.drop([:__meta__])
       |> Poison.Encoder.Map.encode(options)
     end
   end
