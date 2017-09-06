@@ -5,7 +5,7 @@ defmodule EventTest do
   alias Osdi.{Repo, Person, Event}
 
   def create_fake_event do
-    [organizer, creator] = Repo.all(Person) |> Enum.take(2)
+    [organizer, creator] = Repo.all(Person) |> Repo.preload(~w(phone_numbers email_addresses)a) |> Enum.take(2)
     event = %Event{}
 
     [name, title, description, summary, browser_url, type, featured_image_url] =
@@ -17,35 +17,24 @@ defmodule EventTest do
 
     tags = ~w(one two three)
 
-    location = %{}
+    location = %{locality: Faker.Company.bs(), venue: Faker.Beer.malt()}
+
+    host = %{name: organizer.given_name <> " " <> organizer.family_name,
+      phone_number: organizer.phone_numbers |> List.first() |> Map.get(:number),
+      email_address: organizer.email_addresses |> List.first() |> Map.get(:address)}
 
     new_event = Event.changeset(event, ~M(name, title, description, summary,
       browser_url, type, featured_image_url, start_date, end_date, organizer,
-      creator, tags, location
+      creator, tags, location, host
     ))
 
     Repo.insert!(new_event)
   end
 
-  test "create event with organizer, creator" do
-    [organizer, creator] = Repo.all(Person) |> Enum.take(2)
-    event = %Event{}
-
-    [name, title, description, summary, browser_url, type, featured_image_url] =
-      [Faker.Beer.name(), Faker.Beer.style(), Faker.Beer.yeast(), Faker.Beer.malt(),
-       Faker.Internet.url(), Faker.Company.bs(), Faker.Internet.url()]
-
-    start_date = DateTime.utc_now() |> Timex.shift(days: 4)
-    end_date = DateTime.utc_now() |> Timex.shift(days: 4, hours: 4)
-
-    tags = ~w(one two three)
-
-    new_event = Event.changeset(event, ~M(name, title, description, summary,
-      browser_url, type, featured_image_url, start_date, end_date, organizer,
-      creator, tags
-    ))
-
-    assert %Event{} = create_fake_event()
+  test "create event with organizer, creator, host" do
+    event = %Event{} = create_fake_event()
+    assert is_map(event)
+    assert %{name: name} = event.host
   end
 
   test "add tags four, five, six" do

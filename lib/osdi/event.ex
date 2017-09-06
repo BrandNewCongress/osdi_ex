@@ -12,6 +12,8 @@ defmodule Osdi.Event do
     creator organizer modified_by location tags
   )a
 
+  @embeds ~w(host)a
+
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "events" do
     field :identifiers, {:array, :string}
@@ -25,6 +27,8 @@ defmodule Osdi.Event do
     field :featured_image_url, :string
     field :start_date, :utc_datetime
     field :end_date, :utc_datetime
+
+    embeds_one :host, Osdi.Host
 
     belongs_to :creator, Osdi.Person
     belongs_to :organizer, Osdi.Person
@@ -41,6 +45,7 @@ defmodule Osdi.Event do
     event
     |> cast(params, @base_attrs)
     |> cast_assoc(:location)
+    |> cast_embed(:host)
     |> put_assoc(:creator, params.creator)
     |> put_assoc(:organizer, params.organizer)
     |> put_assoc(:tags, params.tags |> Tag.get_or_insert_all())
