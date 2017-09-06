@@ -38,6 +38,15 @@ defmodule Osdi.Person do
     timestamps()
   end
 
+  defimpl Poison.Encoder, for: Osdi.Person do
+    def encode(person, options) do
+      person
+      |> Map.take(@base_attrs ++ @associations)
+      |> Enum.reject(fn {key, value} -> Ecto.assoc_loaded?(value) end)
+      |> Poison.Encoder.Map.encode(options)
+    end
+  end
+
   def changeset(person, params \\ %{}) do
     params = Enum.reduce(
       [{:email_address, EmailAddress}, {:phone_numbers, PhoneNumber},

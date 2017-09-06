@@ -77,4 +77,12 @@ defmodule Osdi.Event do
     |> change(tags: records)
     |> Repo.update!()
   end
+
+  def set_tags(event = %Osdi.Event{}, tags) do
+    records = tags |> Tag.get_or_insert_all()
+
+    event
+    |> change(tags: records)
+    |> Repo.update!()
+  end
 end
