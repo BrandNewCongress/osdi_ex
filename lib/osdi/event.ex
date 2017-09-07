@@ -90,4 +90,11 @@ defmodule Osdi.Event do
     |> change(tags: records)
     |> Repo.update!()
   end
+
+  def slug_for(title, date) do
+    title_part = title |> String.downcase() |> String.replace(" ", "-")
+    date_part = date |> DateTime.to_date() |> Date.to_string |> String.split("-") |> Enum.slice(1..3) |> Enum.join("-")
+
+    "#{title_part}-#{date_part}"
+  end
 end
