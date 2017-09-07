@@ -92,7 +92,7 @@ defmodule Osdi.Event do
   end
 
   def slug_for(title, date) do
-    title_part = title |> String.downcase() |> String.replace(" ", "-")
+    title_part = title |> String.downcase() |> String.replace(~r/[ \t]+/, "-")
     date_part = date |> DateTime.to_date() |> Date.to_string |> String.split("-") |> Enum.slice(1..3) |> Enum.join("-")
 
     "#{title_part}-#{date_part}"
