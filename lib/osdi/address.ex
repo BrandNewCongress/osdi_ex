@@ -63,4 +63,8 @@ defmodule Osdi.Address do
       found -> found
     end
   end
+
+  def get_or_insert(address = %Osdi.Address{}) do
+    %{}
+  end
 end
