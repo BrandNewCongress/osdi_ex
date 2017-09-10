@@ -1,7 +1,7 @@
 defmodule Osdi.Person do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Osdi.{Repo, PhoneNumber, EmailAddress, Tag}
+  alias Osdi.{Repo, PhoneNumber, EmailAddress, Address, Tag}
   import Ecto.Query
 
   @base_attrs ~w(
@@ -52,7 +52,7 @@ defmodule Osdi.Person do
   def changeset(person, params \\ %{}) do
     params = Enum.reduce(
       [{:email_address, EmailAddress}, {:phone_numbers, PhoneNumber},
-       {:postal_addresses, PostalAddress}],
+       {:postal_addresses, Address}],
       params,
       &association_reduce/2)
 
