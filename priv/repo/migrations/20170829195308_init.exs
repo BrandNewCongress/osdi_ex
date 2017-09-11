@@ -48,7 +48,7 @@ defmodule Osdi.Repo.Migrations.Init do
       add :region, :string
       add :postal_code, :string
       add :country, :string, default: "United States of America"
-      add :status, :string
+      add :public, :boolean
       add :time_zone, :string
       add :location, :geometry
 

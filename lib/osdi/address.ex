@@ -5,7 +5,7 @@ defmodule Osdi.Address do
 
   @base_attrs ~w(
     venue address_lines location locality region postal_code country
-    status time_zone location
+    status time_zone location public
   )a
 
   schema "addresses" do
@@ -16,7 +16,7 @@ defmodule Osdi.Address do
     field :postal_code, :string
     field :country, :string, default: "United States of America"
     field :time_zone, :string
-    field :status, :string
+    field :public, :boolean
     field :location, Geo.Point
 
     timestamps()
