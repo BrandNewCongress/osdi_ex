@@ -29,8 +29,8 @@ defmodule AttendanceTest do
       %{given_name: Faker.Name.first_name(), family_name: Faker.Name.last_name(),
         email_address: Faker.Internet.email(), phone_number: Faker.Phone.EnUs.phone(),
         postal_address: %Address{
-          venue: "The Office",
-          address_lines: ["714 S Gay St."],
+          venue: "Ben's Place Office",
+          address_lines: ["719 S Gay St."],
           locality: "Knoxville",
           region: "TN",
           postal_code: "37902",
@@ -41,7 +41,10 @@ defmodule AttendanceTest do
     %{id: first_attendance_id, person_id: first_person_id} = Attendance.push(event.id, rsvp_data)
     %{id: second_attendance_id, person_id: second_person_id} = Attendance.push(event.id, rsvp_data)
 
+    %{postal_addresses: [%{address_lines: [line_zero | _]} | _]} = Repo.get(Person, second_person_id) |> Repo.preload(:postal_addresses)
+
     assert first_person_id = second_person_id
     assert first_attendance_id = second_attendance_id
+    assert "719 S Gay St." = line_zero
   end
 end
