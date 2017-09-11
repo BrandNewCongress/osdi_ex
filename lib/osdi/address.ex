@@ -5,7 +5,7 @@ defmodule Osdi.Address do
 
   @base_attrs ~w(
     venue address_lines location locality region postal_code country
-    status time_zone location public
+    time_zone location public
   )a
 
   schema "addresses" do
