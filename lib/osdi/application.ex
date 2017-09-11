@@ -7,6 +7,9 @@ defmodule Osdi.Application do
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
+    require Logger
+
+    Logger.info "Connecting to db with environment: #{inspect(Application.get_all_env(:osdi_repo))}"
 
     # List all child processes to be supervised
     children = [
