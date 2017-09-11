@@ -64,7 +64,6 @@ defmodule Osdi.Address do
     end
   end
 
-  def get_or_insert(address = %Osdi.Address{}) do
-    %{}
-  end
+  def get_or_insert(_address = %Osdi.Address{}), do: %Osdi.Address{}
+  def get_or_insert(_address = %{}), do: %{}
 end
