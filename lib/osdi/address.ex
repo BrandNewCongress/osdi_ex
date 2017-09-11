@@ -45,7 +45,7 @@ defmodule Osdi.Address do
   end
 
   def get_or_insert(address = %Osdi.Address{address_lines: address_lines, locality: locality, region: region}) do
-    address_line_zero = case address_lines
+    address_line_zero = case address_lines do
       nil -> nil
       list -> list |> List.first()
     end
