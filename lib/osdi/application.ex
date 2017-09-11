@@ -9,7 +9,7 @@ defmodule Osdi.Application do
     import Supervisor.Spec, warn: false
     require Logger
 
-    Logger.info "Connecting to db with environment: #{inspect(Application.get_all_env(:osdi_repo))}"
+    IO.puts "Connecting to db with environment: #{inspect(Application.get_all_env(:osdi))}"
 
     # List all child processes to be supervised
     children = [
