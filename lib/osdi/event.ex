@@ -97,4 +97,8 @@ defmodule Osdi.Event do
 
     "#{title_part}-#{date_part}"
   end
+
+  def rsvp_link_for(name) do
+    Cipher.encrypt(name)
+  end
 end
