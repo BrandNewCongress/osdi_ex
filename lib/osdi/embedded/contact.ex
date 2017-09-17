@@ -10,8 +10,8 @@ defmodule Osdi.Contact do
     field :public, :boolean, default: true
   end
 
-  def changeset(host, params \\ %{}) do
-    host
+  def changeset(contact, params \\ %{}) do
+    contact
     |> cast(params, [:name, :phone_number, :email_address, :public])
   end
 end

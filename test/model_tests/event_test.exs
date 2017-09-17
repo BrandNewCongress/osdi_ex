@@ -22,20 +22,20 @@ defmodule EventTest do
     name = "#{organizer.given_name} #{organizer.family_name}"
     phone_number = organizer.phone_numbers |> List.first() |> Map.get(:number)
     email_address = organizer.email_addresses |> List.first() |> Map.get(:address)
-    host = %{mame: name, phone_number: phone_number, email_address: email_address}
+    contact = %{mame: name, phone_number: phone_number, email_address: email_address}
 
     new_event = Event.changeset(event, ~M(name, title, description, summary,
       browser_url, type, featured_image_url, start_date, end_date, organizer,
-      creator, tags, location, host
+      creator, tags, location, contact
     ))
 
     Repo.insert!(new_event)
   end
 
-  test "create event with organizer, creator, host" do
+  test "create event with organizer, creator, contact" do
     event = %Event{} = create_fake_event()
     assert is_map(event)
-    assert %{name: _name} = event.host
+    assert %{name: _name} = event.contact
   end
 
   test "add tags four, five, six" do

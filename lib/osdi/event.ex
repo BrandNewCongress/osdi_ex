@@ -12,7 +12,7 @@ defmodule Osdi.Event do
     creator organizer modified_by location tags
   )a
 
-  @embeds ~w(host)a
+  @embeds ~w(contact)a
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "events" do
@@ -46,7 +46,7 @@ defmodule Osdi.Event do
     event
     |> cast(params, @base_attrs)
     |> cast_assoc(:location)
-    |> cast_embed(:host)
+    |> cast_embed(:contact)
     |> put_assoc(:creator, params.creator)
     |> put_assoc(:organizer, params.organizer)
     |> put_assoc(:tags, params.tags |> Tag.get_or_insert_all())
