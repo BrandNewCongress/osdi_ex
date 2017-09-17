@@ -6,6 +6,7 @@ defmodule Osdi.Event do
   @base_attrs ~w(
     name title description summary browser_url type
     featured_image_url start_date end_date status
+    instructions
   )a
 
   @associations ~w(
