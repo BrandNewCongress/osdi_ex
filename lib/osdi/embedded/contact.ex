@@ -1,4 +1,4 @@
-defmodule Osdi.Host do
+defmodule Osdi.Contact do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -6,6 +6,7 @@ defmodule Osdi.Host do
     field :name, :string
     field :phone_number, :string
     field :email_address, :string
+    field :additional_info, :string
     field :public, :boolean, default: true
   end
 

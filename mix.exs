@@ -34,7 +34,8 @@ defmodule Osdi.Mixfile do
       {:parallel_stream, "~> 1.0.5"},
       {:plug, "~> 1.0"},
       {:redix, ">= 0.0.0"},
-      {:geo, "~> 1.4"}
+      {:geo, "~> 1.4"},
+      {:cipher, ">= 1.3.3"}
     ]
   end
 end
