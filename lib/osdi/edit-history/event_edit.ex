@@ -28,7 +28,7 @@ defmodule Osdi.EventEdit do
 
   def edits_for_within(id, starting_at, ending_at) do
     Repo.all(from ee in Osdi.EventEdit,
-      where: ee.event_id == ^event_id
+      where: ee.event_id == ^id
         and ee.inserted_at > ^starting_at
         and ee.inserted_at < ^ending_at,
       select: ee.edit)
