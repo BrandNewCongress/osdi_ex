@@ -8,25 +8,28 @@ defmodule EventTest do
     [organizer, creator] = Repo.all(Person) |> Repo.preload(~w(phone_numbers email_addresses)a) |> Enum.take(2)
     event = %Event{}
 
-    [name, title, description, summary, browser_url, type, featured_image_url] =
-      [Faker.Beer.name(), Faker.Beer.style(), Faker.Beer.yeast(), Faker.Beer.malt(),
-       Faker.Internet.url(), Faker.Company.bs(), Faker.Internet.url()]
+    [event_name, title, description, summary, browser_url, type, featured_image_url] =
+      [Faker.Code.iban(), Faker.Beer.style(), Faker.Beer.yeast(), Faker.Beer.malt(),
+       Faker.Internet.url(), "Phonebank", Faker.Internet.url()]
 
     start_date = DateTime.utc_now() |> Timex.shift(days: 4)
     end_date = DateTime.utc_now() |> Timex.shift(days: 4, hours: 4)
 
     tags = ~w(one two three)
 
-    location = %{locality: Faker.Company.bs(), venue: Faker.Beer.malt()}
+    location = %{locality: Faker.Company.bs(), venue: Faker.Beer.malt(), time_zone: "America/New_York"}
 
     name = "#{organizer.given_name} #{organizer.family_name}"
     phone_number = organizer.phone_numbers |> List.first() |> Map.get(:number)
     email_address = organizer.email_addresses |> List.first() |> Map.get(:address)
     contact = %{mame: name, phone_number: phone_number, email_address: email_address}
+    status = "confirmed"
+
+    name = event_name
 
     new_event = Event.changeset(event, ~M(name, title, description, summary,
       browser_url, type, featured_image_url, start_date, end_date, organizer,
-      creator, tags, location, contact
+      creator, tags, location, contact, status
     ))
 
     Repo.insert!(new_event)
