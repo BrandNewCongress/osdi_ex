@@ -17,7 +17,8 @@ defmodule EventTest do
 
     tags = ~w(one two three)
 
-    location = %{locality: Faker.Company.bs(), venue: Faker.Beer.malt(), time_zone: "America/New_York"}
+    location = %{locality: Faker.Company.bs(), venue: Faker.Beer.malt(), time_zone: "America/New_York",
+      address_lines: [Faker.Company.bs()]}
 
     name = "#{organizer.given_name} #{organizer.family_name}"
     phone_number = organizer.phone_numbers |> List.first() |> Map.get(:number)
