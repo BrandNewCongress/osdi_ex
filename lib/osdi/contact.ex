@@ -2,7 +2,7 @@ defmodule Osdi.Contact do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @base_attrs ~w(origin_system action_date contact_type input_type success status_code)a
+  @base_attrs ~w(identifiers origin_system action_date contact_type input_type success status_code)a
   @associations ~w(target contactor)a
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
@@ -17,6 +17,9 @@ defmodule Osdi.Contact do
 
     belongs_to :target, Osdi.Person
     belongs_to :contactor, Osdi.Person
+    belongs_to :contact_effort, Osdi.ContactEffort
+
+    has_many :answers, Osdi.Answer
 
     timestamps()
   end

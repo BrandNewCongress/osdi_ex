@@ -5,7 +5,7 @@ defmodule Osdi.Person do
   import Ecto.Query
 
   @base_attrs ~w(
-    given_name family_name honorific_prefix honorific_suffix
+    identifiers given_name family_name honorific_prefix honorific_suffix
     gender birthdate languages_spoken party_identification
   )a
 

@@ -2,7 +2,7 @@ defmodule Osdi.Question do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @base_attrs ~w(origin_system title description summary question_type)a
+  @base_attrs ~w(identifiers origin_system title description summary question_type)a
   @associations ~w(creator modified_by)a
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
@@ -18,6 +18,8 @@ defmodule Osdi.Question do
 
     belongs_to :creator, Osdi.Person
     belongs_to :modified_by, Osdi.Person
+
+    has_many :answers, Osdi.Answer
 
     timestamps()
   end

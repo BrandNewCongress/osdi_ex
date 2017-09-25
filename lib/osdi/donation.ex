@@ -2,7 +2,7 @@ defmodule Osdi.Donation do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @base_attrs ~w(origin_system action_date amount voided voided_date url)a
+  @base_attrs ~w(identifiers origin_system action_date amount voided voided_date url)a
   @associations ~w(payment referrer_data recipients person)a
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
