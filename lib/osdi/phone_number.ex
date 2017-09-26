@@ -40,7 +40,8 @@ defmodule Osdi.PhoneNumber do
         phone_number
         |> Map.from_struct()
         |> Map.take(~w(do_not_call sms_capable twilio_lookup_result)a)
-        |> Enum.into([])
+        |> Enum.filter(fn {_key, value} -> value != nil end)
+        |> Enum.into([number: phone_number.number])
       ],
       conflict_target: :number)
   end
