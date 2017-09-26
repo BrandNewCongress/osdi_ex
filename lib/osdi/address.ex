@@ -70,7 +70,7 @@ defmodule Osdi.Address do
   def get_or_insert(_address = %Osdi.Address{}), do: %Osdi.Address{}
   def get_or_insert(_address = %{}), do: %{}
 
-  def update_coordinates(address = %Osdi.Address{id: id}, {latitude, longitude}) do
+  def update_coordinates(address = %Osdi.Address{id: _id}, {latitude, longitude}) do
     new_geo_point = %Geo.Point{coordinates: {latitude, longitude}, srid: nil}
 
     address

@@ -19,6 +19,7 @@ defmodule Osdi.PhoneNumber do
     field :country, :string
     field :sms_capable, :boolean
     field :do_not_call, :boolean
+    field :twilio_lookup_result, :map
 
     many_to_many :people, Osdi.Person, join_through: "people_phones"
 

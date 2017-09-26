@@ -15,7 +15,7 @@ defmodule Osdi.Event do
 
   @embeds ~w(contact)a
 
-  @derive {Poison.Encoder, only: @base_attrs ++ @associations}
+  @derive {Poison.Encoder, only: @base_attrs ++ @associations ++ @embeds}
   schema "events" do
     field :identifiers, {:array, :string}
     field :name, :string
