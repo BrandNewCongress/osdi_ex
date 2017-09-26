@@ -39,7 +39,7 @@ defmodule Osdi.PhoneNumber do
       on_conflict: [set:
         phone_number
         |> Map.from_struct()
-        |> Map.take(~w(do_not_call sms_capable)a)
+        |> Map.take(~w(do_not_call sms_capable twilio_lookup_result)a)
         |> Enum.into([])
       ],
       conflict_target: :number)
