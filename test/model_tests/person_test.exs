@@ -17,8 +17,9 @@ defmodule SignupTest do
   end
 
   # Make this test pass
-  test "person push, name overwrite, add email" do
+  test "person push -> overwrites name, adds email, concatenates identifiers" do
     mock_person = %Person{
+      identifiers: ["nb:1"],
       given_name: Faker.Name.first_name(),
       family_name: Faker.Name.last_name(),
       email_addresses: [%{address: Faker.Internet.email(), primary: true, status: "subscribed"}],
@@ -36,10 +37,15 @@ defmodule SignupTest do
 
     modified =
       mock_person
+      |> Map.put(:given_name, Faker.Name.first_name())
+      |> Map.put(:family_name, Faker.Name.first_name())
+      |> Map.put(:identifiers, ["nb:2"])
       |> Map.put(:email_addresses, [%{address: Faker.Internet.email(), primary: true, status: "subscribed"}])
 
+    second_first_name = modified.given_name
+
     insertable_modified =
-      mock_person
+      modified
       |> Map.put(:email_addresses, (Enum.map modified.email_addresses, &EmailAddress.get_or_insert/1))
       |> Map.put(:phone_numbers, (Enum.map modified.phone_numbers, &PhoneNumber.get_or_insert/1))
 
@@ -48,6 +54,7 @@ defmodule SignupTest do
     assert pushed.id == created_id
     assert length(pushed.email_addresses) == 2
     assert length(pushed.phone_numbers) == 1
+    assert length(pushed.identifiers) == 2
   end
 
   test "raw insert" do

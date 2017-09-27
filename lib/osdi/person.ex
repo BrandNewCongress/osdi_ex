@@ -5,7 +5,7 @@ defmodule Osdi.Person do
   import Ecto.Query
 
   @base_attrs ~w(
-    given_name family_name honorific_prefix honorific_suffix
+    identifiers given_name family_name honorific_prefix honorific_suffix
     gender birthdate languages_spoken party_identification
   )a
 
@@ -173,7 +173,6 @@ defmodule Osdi.Person do
           [{:email_addresses, EmailAddress, &(&1.address)},
            {:phone_numbers, PhoneNumber, &(&1.number)},
            {:tags, Tag, &(&1.name)}]
-          #  {:postal_addresses, Address, &(&1.address_lines |> List.first())}]
           |> Enum.map(generate_combiner(person, existing))
           |> Enum.reduce(existing, fn ({key, val}, acc) -> Map.put(acc, key, val) end)
           |> Map.put(:identifiers, combine_identifiers(person[:identifiers], existing.identifiers))
