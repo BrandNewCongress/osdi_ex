@@ -77,6 +77,10 @@ defmodule Osdi.Person do
 
   defp x_assoc(changeset, key, els) do
     changeset
+  end
+
+  defp x_assoc(changeset, key, els) do
+    changeset
     |> put_assoc(key, els)
   end
 
@@ -206,5 +210,25 @@ defmodule Osdi.Person do
     |> Enum.concat(list_b || [])
     |> Enum.into(MapSet.new())
     |> Enum.to_list()
+  end
+
+  def add_tags(person = %Osdi.Person{tags: current_tags}, tags) when is_list(current_tags) do
+    current_tagstrings = current_tags |> Enum.map(&(&1.name))
+
+    records =
+      tags
+      |> Enum.concat(current_tagstrings)
+      |> Tag.get_or_insert_all()
+
+    person
+    |> change(tags: records)
+    |> Repo.update!()
+  end
+
+  def add_tags(_person = %Osdi.Person{id: id}, tags) do
+    Osdi.Person
+    |> Repo.get(id)
+    |> Repo.preload(:tags)
+    |> add_tags(tags)
   end
 end
