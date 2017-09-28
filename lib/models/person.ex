@@ -241,7 +241,7 @@ defmodule Osdi.Person do
       |> Enum.reject(fn tag -> Enum.member?(tags, tag) end)
       |> Tag.get_or_insert_all()
 
-    event
+    person
     |> change(tags: records)
     |> Repo.update!()
   end
