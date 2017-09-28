@@ -212,7 +212,14 @@ defmodule Osdi.Person do
     |> Enum.to_list()
   end
 
-  def add_tags(person = %Osdi.Person{tags: current_tags}, tags) when is_list(current_tags) do
+  defp ensure_tags(person = %Osdi.Person{tags: current_tags}) when is_list(current_tags), do: person
+  defp ensure_tags(_person = %Osdi.Person{id: id}), do:
+    Osdi.Person
+    |> Repo.get(id)
+    |> Repo.preload(:tags)
+
+  def add_tags(person_maybe_tags, tags) do
+    person = %Osdi.Person{tags: current_tags} = ensure_tags(person)
     current_tagstrings = current_tags |> Enum.map(&(&1.name))
 
     records =
@@ -225,10 +232,18 @@ defmodule Osdi.Person do
     |> Repo.update!()
   end
 
-  def add_tags(_person = %Osdi.Person{id: id}, tags) do
-    Osdi.Person
-    |> Repo.get(id)
-    |> Repo.preload(:tags)
-    |> add_tags(tags)
+  def remove_tags(person_maybe_tags, tags) do
+    person = %Osdi.Person{tags: current_tags} = ensure_tags(person)
+
+    records =
+      current_tags
+      |> Enum.map(&(&1.name))
+      |> Enum.reject(fn tag -> Enum.member?(tags, tag) end)
+      |> Tag.get_or_insert_all()
+
+    event
+    |> change(tags: records)
+    |> Repo.update!()
   end
+
 end
