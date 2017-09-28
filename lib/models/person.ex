@@ -219,7 +219,7 @@ defmodule Osdi.Person do
     |> Repo.preload(:tags)
 
   def add_tags(person_maybe_tags, tags) do
-    person = %Osdi.Person{tags: current_tags} = ensure_tags(person)
+    person = %Osdi.Person{tags: current_tags} = ensure_tags(person_maybe_tags)
     current_tagstrings = current_tags |> Enum.map(&(&1.name))
 
     records =
@@ -233,7 +233,7 @@ defmodule Osdi.Person do
   end
 
   def remove_tags(person_maybe_tags, tags) do
-    person = %Osdi.Person{tags: current_tags} = ensure_tags(person)
+    person = %Osdi.Person{tags: current_tags} = ensure_tags(person_maybe_tags)
 
     records =
       current_tags
