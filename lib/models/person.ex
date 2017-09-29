@@ -190,7 +190,7 @@ defmodule Osdi.Person do
 
         (from p in Osdi.Person, where: p.id == ^id)
         |> Repo.one()
-        |> Repo.preload([:phone_numbers, :email_addresses])
+        |> Repo.preload(@associations)
     end
   end
 
