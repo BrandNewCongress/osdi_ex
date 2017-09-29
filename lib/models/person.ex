@@ -75,7 +75,7 @@ defmodule Osdi.Person do
     Map.put(params, assoc, new_els)
   end
 
-  defp x_assoc(changeset, key, els) do
+  defp x_assoc(changeset, key, nil) do
     changeset
   end
 
@@ -200,6 +200,9 @@ defmodule Osdi.Person do
         |> Enum.map(&module.get_or_insert/1)
         |> Enum.concat(Map.get(existing, key))
         |> Enum.uniq_by(uniquer)
+
+      # IO.inspect key
+      # IO.inspect combined
 
       {key, combined}
     end
