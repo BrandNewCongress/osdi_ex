@@ -1,5 +1,5 @@
 defmodule Osdi.PersonSignup do
-  alias Osdi.{Repo, Person}
+  alias Osdi.{Person}
 
   # Only person is required
   # Partial implementation

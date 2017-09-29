@@ -11,7 +11,7 @@ defmodule Osdi.Person do
 
   @associations ~w(phone_numbers email_addresses postal_addresses tags)a
 
-  @derive {Poison.Encoder, only: @base_attrs ++ @associations}
+  # @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "people" do
     field :identifiers, {:array, :string}
     field :given_name, :string
@@ -75,7 +75,7 @@ defmodule Osdi.Person do
     Map.put(params, assoc, new_els)
   end
 
-  defp x_assoc(changeset, key, nil) do
+  defp x_assoc(changeset, _key, nil) do
     changeset
   end
 
