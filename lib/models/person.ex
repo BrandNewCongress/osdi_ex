@@ -178,6 +178,7 @@ defmodule Osdi.Person do
            {:phone_numbers, PhoneNumber, &(&1.number)},
            {:tags, Tag, &(&1.name)}]
           |> Enum.map(generate_combiner(person, existing))
+          |> combine_addresses(person)
           |> Enum.reduce(existing, fn ({key, val}, acc) -> Map.put(acc, key, val) end)
           |> Map.put(:identifiers, combine_identifiers(person[:identifiers], existing.identifiers))
           |> Map.take(@base_attrs ++ @associations)
@@ -201,12 +202,12 @@ defmodule Osdi.Person do
         |> Enum.concat(Map.get(existing, key))
         |> Enum.uniq_by(uniquer)
 
-      # IO.inspect key
-      # IO.inspect combined
-
       {key, combined}
     end
   end
+
+  defp combine_addresses(params, person), do:
+    Keyword.put(params, :postal_addresses, Enum.concat(person.postal_addresses, Keyword.get(params, :postal_addresses, [])))
 
   defp combine_identifiers(list_a, list_b) do
     (list_a || [])
