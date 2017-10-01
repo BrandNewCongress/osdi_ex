@@ -124,7 +124,7 @@ defmodule Osdi.Person do
       {id, _count} ->
         (from p in Osdi.Person, where: p.id == ^id)
         |> Repo.one()
-        |> Repo.preload([:phone_numbers, :email_addresses])
+        |> Repo.preload(@associations)
 
       nil -> nil
     end
