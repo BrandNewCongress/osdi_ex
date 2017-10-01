@@ -13,6 +13,7 @@ defmodule Osdi.Tag do
     field :description, :string
 
     has_many :taggings, Osdi.Tagging
+    many_to_many :people, Osdi.Person, join_through: Osdi.Tagging
 
     timestamps()
   end
