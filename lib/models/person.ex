@@ -140,8 +140,11 @@ defmodule Osdi.Person do
 
   defp get_numbers(%{phone_number: number}), do: [number]
   defp get_numbers(%{phone_numbers: number_structs}), do: number_structs |> Enum.map(&(&1.number))
+  defp get_numbers(_else), do: []
+
   defp get_emails(%{email_address: address}), do: [address]
   defp get_emails(%{email_addresses: address_structs}), do: address_structs |> Enum.map(&(&1.address))
+  defp get_email(_else), do: []
 
   @doc """
   Matches person and joins email addresses and phone numbers
