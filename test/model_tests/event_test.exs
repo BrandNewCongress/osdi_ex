@@ -6,7 +6,6 @@ defmodule EventTest do
 
   def create_fake_event do
     [organizer, creator] = Repo.all(Person) |> Repo.preload(~w(phone_numbers email_addresses)a) |> Enum.take(2)
-    IO.inspect organizer
     event = %Event{}
 
     [event_name, title, description, summary, browser_url, type, featured_image_url] =
