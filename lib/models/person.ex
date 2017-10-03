@@ -156,7 +156,7 @@ defmodule Osdi.Person do
     |> push()
   end
 
-  def push(person) do
+  def push(person, preload \\ true) do
     case match(person) do
       # No match found
       nil ->
@@ -170,12 +170,7 @@ defmodule Osdi.Person do
         |> Repo.insert!()
 
       # Match chosen
-      %Osdi.Person{id: id} ->
-        existing =
-          (from p in Osdi.Person, where: p.id == ^id)
-          |> Repo.one()
-          |> Repo.preload(@associations)
-
+      existing = %Osdi.Person{id: id} ->
         params =
           [{:email_addresses, EmailAddress, &(&1.address)},
            {:phone_numbers, PhoneNumber, &(&1.number)},
@@ -186,14 +181,18 @@ defmodule Osdi.Person do
           |> Map.put(:identifiers, combine_identifiers(person[:identifiers], existing.identifiers))
           |> Map.take(@base_attrs ++ @associations)
 
-        %{id: id} =
+        result = %{id: id} =
           existing
           |> changeset(params)
           |> Repo.update!()
 
-        (from p in Osdi.Person, where: p.id == ^id)
-        |> Repo.one()
-        |> Repo.preload(@associations)
+        if preload do
+          (from p in Osdi.Person, where: p.id == ^id)
+          |> Repo.one()
+          |> Repo.preload(@associations)
+        else
+          result
+        end
     end
   end
 
