@@ -50,6 +50,7 @@ defmodule Osdi.Person do
   end
 
   def changeset(person, params \\ %{}) do
+    IO.inspect params
     params = Enum.reduce(
       [{:email_address, EmailAddress}, {:phone_numbers, PhoneNumber},
        {:postal_addresses, Address}],
@@ -164,6 +165,12 @@ defmodule Osdi.Person do
           %{__struct__: _} -> person |> Map.from_struct()
           %{} -> person
         end
+
+        as_map =
+          as_map
+          |> Map.put(:email_addresses, as_map |> get_emails() |> Enum.map(&%{address: &1}))
+          |> Map.put(:phone_numbers, as_map |> get_numbers() |> Enum.map(&%{number: &1}))
+          |> Map.drop([:email_address, :phone_number])
 
         %Osdi.Person{}
         |> changeset(as_map)
