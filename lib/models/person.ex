@@ -172,9 +172,16 @@ defmodule Osdi.Person do
           |> Map.put(:phone_numbers, as_map |> get_numbers() |> Enum.map(&%{number: &1}))
           |> Map.drop([:email_address, :phone_number])
 
-        %Osdi.Person{}
-        |> changeset(as_map)
-        |> Repo.insert!()
+        result =
+          %Osdi.Person{}
+          |> changeset(as_map)
+          |> Repo.insert!()
+
+        if preload do
+          Repo.preload(result, @associations)
+        else
+          result
+        end
 
       # Match chosen
       existing = %Osdi.Person{id: id} ->
