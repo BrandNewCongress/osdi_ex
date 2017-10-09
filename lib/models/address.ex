@@ -44,7 +44,10 @@ defmodule Osdi.Address do
     |> cast(params, @base_attrs)
   end
 
-  def get_or_insert(address = %Osdi.Address{address_lines: address_lines, locality: locality, region: region}) do
+  def get_or_insert(address =
+    %Osdi.Address{address_lines: address_lines, locality: locality,
+                  region: region}) when is_list(address_lines) and not is_nil(region) do
+
     address_line_zero = case address_lines do
       nil -> nil
       list -> list |> List.first()
@@ -67,10 +70,10 @@ defmodule Osdi.Address do
     end
   end
 
-  def get_or_insert(_address = %Osdi.Address{}), do: %Osdi.Address{}
-  def get_or_insert(_address = %{}), do: %{}
+  def get_or_insert(address = %Osdi.Address{}), do: address
+  def get_or_insert(address = %{}), do: address
 
-  def update_coordinates(address = %Osdi.Address{id: id}, {latitude, longitude}) do
+  def update_coordinates(address = %Osdi.Address{id: _id}, {latitude, longitude}) do
     new_geo_point = %Geo.Point{coordinates: {latitude, longitude}, srid: nil}
 
     address

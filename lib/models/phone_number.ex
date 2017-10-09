@@ -19,6 +19,7 @@ defmodule Osdi.PhoneNumber do
     field :country, :string
     field :sms_capable, :boolean
     field :do_not_call, :boolean
+    field :twilio_lookup_result, :map
 
     many_to_many :people, Osdi.Person, join_through: "people_phones"
 
@@ -38,8 +39,9 @@ defmodule Osdi.PhoneNumber do
       on_conflict: [set:
         phone_number
         |> Map.from_struct()
-        |> Map.take(~w(do_not_call sms_capable)a)
-        |> Enum.into([])
+        |> Map.take(~w(do_not_call sms_capable twilio_lookup_result)a)
+        |> Enum.filter(fn {_key, value} -> value != nil end)
+        |> Enum.into([number: phone_number.number])
       ],
       conflict_target: :number)
   end

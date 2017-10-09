@@ -7,7 +7,7 @@ defmodule Osdi.Attendance do
   @base_attrs ~w(origin_system action_date status attended)a
   @associations ~w(person event)a
 
-  @derive {Poison.Encoder, only: @base_attrs}
+  @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "attendances" do
     field :origin_system, :string
     field :action_date, :utc_datetime

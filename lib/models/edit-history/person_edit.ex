@@ -1,6 +1,5 @@
 defmodule Osdi.PersonEdit do
   use Ecto.Schema
-  import Ecto.Changeset
   import Ecto.Query
   alias Osdi.{Repo}
 

@@ -11,7 +11,7 @@ defmodule Osdi.Person do
 
   @associations ~w(phone_numbers email_addresses postal_addresses tags)a
 
-  @derive {Poison.Encoder, only: @base_attrs ++ @associations}
+  # @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "people" do
     field :identifiers, {:array, :string}
     field :given_name, :string
@@ -75,6 +75,10 @@ defmodule Osdi.Person do
     Map.put(params, assoc, new_els)
   end
 
+  defp x_assoc(changeset, _key, nil) do
+    changeset
+  end
+
   defp x_assoc(changeset, key, els) do
     changeset
     |> put_assoc(key, els)
@@ -120,7 +124,7 @@ defmodule Osdi.Person do
       {id, _count} ->
         (from p in Osdi.Person, where: p.id == ^id)
         |> Repo.one()
-        |> Repo.preload([:phone_numbers, :email_addresses])
+        |> Repo.preload(@associations)
 
       nil -> nil
     end
@@ -136,8 +140,11 @@ defmodule Osdi.Person do
 
   defp get_numbers(%{phone_number: number}), do: [number]
   defp get_numbers(%{phone_numbers: number_structs}), do: number_structs |> Enum.map(&(&1.number))
+  defp get_numbers(_else), do: []
+
   defp get_emails(%{email_address: address}), do: [address]
   defp get_emails(%{email_addresses: address_structs}), do: address_structs |> Enum.map(&(&1.address))
+  defp get_emails(_else), do: []
 
   @doc """
   Matches person and joins email addresses and phone numbers
@@ -149,7 +156,7 @@ defmodule Osdi.Person do
     |> push()
   end
 
-  def push(person) do
+  def push(person, preload \\ true) do
     case match(person) do
       # No match found
       nil ->
@@ -158,35 +165,47 @@ defmodule Osdi.Person do
           %{} -> person
         end
 
-        %Osdi.Person{}
-        |> changeset(as_map)
-        |> Repo.insert!()
+        as_map =
+          as_map
+          |> Map.put(:email_addresses, as_map |> get_emails() |> Enum.map(&%{address: &1}))
+          |> Map.put(:phone_numbers, as_map |> get_numbers() |> Enum.map(&%{number: &1}))
+          |> Map.drop([:email_address, :phone_number])
+
+        result =
+          %Osdi.Person{}
+          |> changeset(as_map)
+          |> Repo.insert!()
+
+        if preload do
+          Repo.preload(result, @associations)
+        else
+          result
+        end
 
       # Match chosen
-      %Osdi.Person{id: id} ->
-        existing =
-          (from p in Osdi.Person, where: p.id == ^id)
-          |> Repo.one()
-          |> Repo.preload(@associations)
-
+      existing = %Osdi.Person{id: _id} ->
         params =
           [{:email_addresses, EmailAddress, &(&1.address)},
            {:phone_numbers, PhoneNumber, &(&1.number)},
            {:tags, Tag, &(&1.name)}]
-          #  {:postal_addresses, Address, &(&1.address_lines |> List.first())}]
           |> Enum.map(generate_combiner(person, existing))
+          |> combine_addresses(existing)
           |> Enum.reduce(existing, fn ({key, val}, acc) -> Map.put(acc, key, val) end)
           |> Map.put(:identifiers, combine_identifiers(person[:identifiers], existing.identifiers))
           |> Map.take(@base_attrs ++ @associations)
 
-        %{id: id} =
+        result = %{id: id} =
           existing
           |> changeset(params)
           |> Repo.update!()
 
-        (from p in Osdi.Person, where: p.id == ^id)
-        |> Repo.one()
-        |> Repo.preload([:phone_numbers, :email_addresses])
+        if preload do
+          (from p in Osdi.Person, where: p.id == ^id)
+          |> Repo.one()
+          |> Repo.preload(@associations)
+        else
+          result
+        end
     end
   end
 
@@ -202,10 +221,54 @@ defmodule Osdi.Person do
     end
   end
 
+  defp combine_addresses(params, person) do
+    new_addresses =
+      person.postal_addresses
+      |> Enum.concat(Keyword.get(params, :postal_addresses, []))
+
+    params
+    |> Keyword.put(:postal_addresses, new_addresses)
+  end
+
   defp combine_identifiers(list_a, list_b) do
     (list_a || [])
     |> Enum.concat(list_b || [])
     |> Enum.into(MapSet.new())
     |> Enum.to_list()
   end
+
+  defp ensure_tags(person = %Osdi.Person{tags: current_tags}) when is_list(current_tags), do: person
+  defp ensure_tags(_person = %Osdi.Person{id: id}), do:
+    Osdi.Person
+    |> Repo.get(id)
+    |> Repo.preload(:tags)
+
+  def add_tags(person_maybe_tags, tags) do
+    person = %Osdi.Person{tags: current_tags} = ensure_tags(person_maybe_tags)
+    current_tagstrings = current_tags |> Enum.map(&(&1.name))
+
+    records =
+      tags
+      |> Enum.concat(current_tagstrings)
+      |> Tag.get_or_insert_all()
+
+    person
+    |> change(tags: records)
+    |> Repo.update!()
+  end
+
+  def remove_tags(person_maybe_tags, tags) do
+    person = %Osdi.Person{tags: current_tags} = ensure_tags(person_maybe_tags)
+
+    records =
+      current_tags
+      |> Enum.map(&(&1.name))
+      |> Enum.reject(fn tag -> Enum.member?(tags, tag) end)
+      |> Tag.get_or_insert_all()
+
+    person
+    |> change(tags: records)
+    |> Repo.update!()
+  end
+
 end
