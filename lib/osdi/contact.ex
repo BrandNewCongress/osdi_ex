@@ -14,6 +14,7 @@ defmodule Osdi.Contact do
     field :input_type, :string
     field :success, :boolean
     field :status_code, :string
+    field :custom_fields, :map
 
     belongs_to :target, Osdi.Person
     belongs_to :contactor, Osdi.Person

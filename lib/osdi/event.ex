@@ -30,7 +30,7 @@ defmodule Osdi.Event do
     field :start_date, :utc_datetime
     field :end_date, :utc_datetime
 
-    embeds_one :contact, Osdi.Contact
+    embeds_one :contact, Osdi.ContactInfo
 
     belongs_to :creator, Osdi.Person
     belongs_to :organizer, Osdi.Person

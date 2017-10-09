@@ -1,4 +1,4 @@
-defmodule Osdi.Contact do
+defmodule Osdi.ContactInfo do
   use Ecto.Schema
   import Ecto.Changeset
 

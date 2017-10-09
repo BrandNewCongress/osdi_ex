@@ -10,6 +10,7 @@ defmodule Osdi.Repo.Migrations.Contact do
       add :input_type, :string
       add :success, :boolean
       add :status_code, :string
+      add :custom_fields, :map
 
       add :target_id, references(:people)
       add :contactor_id, references(:people)

@@ -20,7 +20,7 @@ defmodule Osdi.ContactEffort do
     belongs_to :creator, Osdi.Person
     belongs_to :modified_by, Osdi.Person
 
-    has_many :contacts, Osdi.Contacts
+    has_many :contacts, Osdi.Contact
     has_one :script, Osdi.Script
 
     timestamps()
