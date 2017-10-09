@@ -50,7 +50,6 @@ defmodule Osdi.Person do
   end
 
   def changeset(person, params \\ %{}) do
-    IO.inspect params
     params = Enum.reduce(
       [{:email_address, EmailAddress}, {:phone_numbers, PhoneNumber},
        {:postal_addresses, Address}],
@@ -184,7 +183,7 @@ defmodule Osdi.Person do
         end
 
       # Match chosen
-      existing = %Osdi.Person{id: id} ->
+      existing = %Osdi.Person{id: _id} ->
         params =
           [{:email_addresses, EmailAddress, &(&1.address)},
            {:phone_numbers, PhoneNumber, &(&1.number)},
