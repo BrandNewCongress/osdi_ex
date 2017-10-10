@@ -11,8 +11,8 @@ defmodule Osdi.ContactEffort do
     field :origin_sytem, :string
     field :name, :string
     field :title, :string
-    field :description, :text
-    field :summary, :text
+    field :description, :string
+    field :summary, :string
     field :start_date, :utc_datetime
     field :end_date, :utc_datetime
     field :type, :string

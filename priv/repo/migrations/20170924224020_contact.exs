@@ -2,6 +2,23 @@ defmodule Osdi.Repo.Migrations.Contact do
   use Ecto.Migration
 
   def change do
+    create table(:contact_efforts) do
+      add :identifiers, {:array, :string}
+      add :origin_sytem, :string
+      add :name, :string
+      add :title, :string
+      add :description, :text
+      add :summary, :text
+      add :start_date, :utc_datetime
+      add :end_date, :utc_datetime
+      add :type, :string
+
+      add :creator_id, references(:people)
+      add :modified_by_id, references(:people)
+
+      timestamps()
+    end
+
     create table(:contacts) do
       add :identifiers, {:array, :string}
       add :origin_system, :string
@@ -41,18 +58,8 @@ defmodule Osdi.Repo.Migrations.Contact do
       add :responses, {:array, :string}
 
       add :person_id, references(:people)
-      add :question_id, referneces(:questions)
+      add :question_id, references(:questions)
       add :contact_id, references(:contacts)
-
-      timestamps()
-    end
-
-    create table(:script_questions) do
-      add :identifiers, {:array, :string}
-      add :sequence, :integer
-
-      add :question_id, references(:question)
-      add :script_id, references(:scripts)
 
       timestamps()
     end
@@ -71,19 +78,12 @@ defmodule Osdi.Repo.Migrations.Contact do
       timestamps()
     end
 
-    create table(:contact_efforts) do
+    create table(:script_questions) do
       add :identifiers, {:array, :string}
-      add :origin_sytem, :string
-      add :name, :string
-      add :title, :string
-      add :description, :text
-      add :summary, :text
-      add :start_date, :utc_datetime
-      add :end_date, :utc_datetime
-      add :type, :string
+      add :sequence, :integer
 
-      add :creator_id, references(:people)
-      add :modified_by_id, references(:people)
+      add :question_id, references(:questions)
+      add :script_id, references(:scripts)
 
       timestamps()
     end

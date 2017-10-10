@@ -10,8 +10,8 @@ defmodule Osdi.Script do
     field :identifiers, {:array, :string}
     field :origin_sytem, :string
     field :title, :string
-    field :description, :text
-    field :summary, :text
+    field :description, :string
+    field :summary, :string
 
     belongs_to :creator, Osdi.Person
     belongs_to :modified_by, Osdi.Person

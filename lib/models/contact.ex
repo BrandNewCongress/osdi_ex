@@ -2,7 +2,7 @@ defmodule Osdi.Contact do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @base_attrs ~w(identifiers origin_system action_date contact_type input_type success status_code)a
+  @base_attrs ~w(identifiers origin_system action_date contact_type input_type success status_code custom_fields)a
   @associations ~w(target contactor)a
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}

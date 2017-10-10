@@ -35,8 +35,8 @@ defmodule Osdi.Attendance do
       phone_number: phone_number, postal_address: postal_address} = person
 
     %{id: person_id} = person = Osdi.Person.push(%{given_name: first_name, family_name: last_name,
-      email_addresses: [%{address: email_address, primary: true}] |> Enum.map(&EmailAddress.get_or_insert/1),
-      phone_numbers: [%{number: phone_number, primary: true}] |> Enum.map(&PhoneNumber.get_or_insert/1),
+      email_addresses: [%{address: email_address, primary: true}],
+      phone_numbers: [%{number: phone_number, primary: true}],
       postal_addresses: [postal_address] |> Enum.map(&Address.get_or_insert/1)
     })
 
