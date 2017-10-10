@@ -4,14 +4,13 @@ defmodule Osdi.RecordContact do
   # Only contact is required / respected
   # Partial implementation
   def main(helper_body = %{contact: contact}) do
-    params =
+    with_assocs =
       contact
-      |> Map.put(:target, %Person{id: contact.target})
-      |> Map.put(:contactor, %Person{id: contact.contactor})
+      |> Map.put(:target_id, contact.target)
+      |> Map.put(:contactor_id, contact.contactor)
+      |> Map.drop([:target, :contactor])
 
-    contact =
-      %Contact{}
-      |> Contact.changeset(params)
-      |> Repo.insert!()
+    as_struct = struct(Contact, with_assocs)
+    Repo.insert!(as_struct)
   end
 end
