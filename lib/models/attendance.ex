@@ -30,7 +30,7 @@ defmodule Osdi.Attendance do
     |> put_assoc(:event, params.event)
   end
 
-  def push(event_id, person) do
+  def push(event_id, person, referrer_data \\ nil) do
     %{given_name: first_name, family_name: last_name, email_address: email_address,
       phone_number: phone_number, postal_address: postal_address} = person
 
@@ -49,12 +49,9 @@ defmodule Osdi.Attendance do
       nil ->
         event = Repo.get(Event, event_id)
 
-        attendance = %Osdi.Attendance{
-          action_date: DateTime.utc_now(), status: "accepted",
-          person: person, event: event, referrer_data: %{}
-        }
-
-        Repo.insert!(attendance)
+        %Osdi.Attendance{}
+        |> changeset(%{referrer_data: referrer_data, action_date: DateTime.utc_now(), status: "accepted", person: person, event: event})
+        |> Repo.insert!()
 
       attendance -> attendance
     end

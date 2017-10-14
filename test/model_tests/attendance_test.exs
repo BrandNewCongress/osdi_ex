@@ -38,13 +38,14 @@ defmodule AttendanceTest do
           location: %Geo.Point{coordinates: {35.9630028, -83.918997}, srid: nil}
       }}
 
-    %{id: first_attendance_id, person_id: first_person_id} = Attendance.push(event.id, rsvp_data)
-    %{id: second_attendance_id, person_id: second_person_id} = Attendance.push(event.id, rsvp_data)
-
+    %{id: first_attendance_id, person_id: first_person_id,
+      referrer_data: referrer_test_data} = Attendance.push(event.id, rsvp_data, %{source: "test_source"})
+    %{id: second_attendance_id, person_id: second_person_id} = Attendance.push(event.id, rsvp_data, %{source: "test_source"})
     %{postal_addresses: [%{address_lines: [line_zero | _]} | _]} = Repo.get(Person, second_person_id) |> Repo.preload(:postal_addresses)
 
     assert first_person_id = second_person_id
     assert first_attendance_id = second_attendance_id
     assert "719 S Gay St." = line_zero
+    assert "test_source" == referrer_test_data.source
   end
 end
