@@ -10,7 +10,7 @@ defmodule Osdi.EmailAddress do
     field :primary, :boolean
     field :address, :string
     field :address_type, :string
-    field :status, :string
+    field :status, :string, default: "subscribed"
 
     many_to_many :people, Osdi.Person, join_through: "people_emails"
 
