@@ -13,6 +13,8 @@ defmodule Manual.SplitMegaPeople do
       person =
         Repo.all(from p in Person, where: p.id == ^pid)
 
+      id = person |> List.last() |> Map.get(:id)
+
       emails = person
         |> Repo.preload(:email_addresses)
         |> Enum.flat_map(& &1.email_addresses)
@@ -22,8 +24,6 @@ defmodule Manual.SplitMegaPeople do
         |> Repo.preload(:phone_numbers)
         |> Enum.flat_map(& &1.phone_numbers)
         |> Enum.map(& &1.number)
-
-      IO.inspect {count, emails, phones}
     end
   end
 end
