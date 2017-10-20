@@ -186,7 +186,7 @@ defmodule Osdi.Person do
       existing = %Osdi.Person{id: _id} ->
         params =
           [{:email_addresses, EmailAddress, &(&1.address)},
-           {:phone_numbers, PhoneNumber, &(&1.number)},
+           {:phone_numbers, PhoneNumber, &(if PhoneNumber.is_probably_fake?(&1.number), do: :rand.uniform(), else: &1.number)},
            {:tags, Tag, &(&1.name)}]
           |> Enum.map(generate_combiner(person, existing))
           |> combine_addresses(existing)

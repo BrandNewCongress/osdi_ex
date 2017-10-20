@@ -51,4 +51,19 @@ defmodule Osdi.PhoneNumber do
     |> struct(phone_number)
     |> get_or_insert()
   end
+
+  def is_probably_fake?(number) do
+    cond do
+      # All one or two numbers
+      length(number |> String.to_charlist() |> Enum.uniq()) < 4 -> true
+      # Some letters
+      has_alpha?(number) -> true
+      # Too short
+      String.length(number) < 6 -> true
+      # We're good
+      true -> false
+    end
+  end
+
+  defp has_alpha?(number), do: Regex.run(~r/[A-Za-z]/, number) != nil
 end
