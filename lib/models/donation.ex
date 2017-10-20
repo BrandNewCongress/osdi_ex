@@ -21,6 +21,7 @@ defmodule Osdi.Donation do
     embeds_many :recipients, Osdi.Recipient
 
     belongs_to :person, Osdi.Person
+    belongs_to :fundraising_page, Osdi.FundraisingPage
 
     timestamps()
   end
@@ -32,5 +33,6 @@ defmodule Osdi.Donation do
     |> cast_embed(:recipients)
     |> cast_embed(:referrer_data)
     |> put_assoc(:person, params.person)
+    |> put_assoc(:fundraising_page, params.fundraising_page)
   end
 end
