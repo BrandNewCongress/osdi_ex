@@ -1,9 +1,9 @@
 defmodule Osdi.RecordContact do
-  alias Osdi.{Repo, Contact, Person}
+  alias Osdi.{Repo, Contact}
 
   # Only contact is required / respected
   # Partial implementation
-  def main(helper_body = %{contact: contact}) do
+  def main(_helper_body = %{contact: contact}) do
     with_assocs =
       contact
       |> Map.put(:target_id, as_id(contact.target))

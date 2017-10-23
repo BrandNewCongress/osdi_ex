@@ -15,6 +15,7 @@ defmodule Osdi.Script do
 
     belongs_to :creator, Osdi.Person
     belongs_to :modified_by, Osdi.Person
+    belongs_to :contact_effort, Osdi.ContactEffort
 
     has_many :script_questions, Osdi.ScriptQuestion
 

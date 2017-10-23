@@ -2,7 +2,7 @@ defmodule Osdi.Attendance do
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query
-  alias Osdi.{Repo, EmailAddress, Address, PhoneNumber, Event}
+  alias Osdi.{Repo, Address, Event}
 
   @base_attrs ~w(origin_system action_date status attended)a
   @associations ~w(person event)a
