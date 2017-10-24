@@ -6,19 +6,19 @@ defmodule Osdi.FundraisingPage do
 
   @derive {Poison.Encoder, only: @base_attrs}
   schema "fundraising_pages" do
-    field :identifiers, {:array, :string}
-    field :origin_system, :string
-    field :name, :string
-    field :title, :string
-    field :description, :string
-    field :summary, :string
-    field :browser_url, :string
-    field :administrative_url, :string
-    field :featured_image_url, :string
-    field :currency, :string
-    field :share_url, :string
+    field(:identifiers, {:array, :string})
+    field(:origin_system, :string)
+    field(:name, :string)
+    field(:title, :string)
+    field(:description, :string)
+    field(:summary, :string)
+    field(:browser_url, :string)
+    field(:administrative_url, :string)
+    field(:featured_image_url, :string)
+    field(:currency, :string)
+    field(:share_url, :string)
 
-    has_many :donations, Osdi.Donation
+    has_many(:donations, Osdi.Donation)
 
     timestamps()
   end

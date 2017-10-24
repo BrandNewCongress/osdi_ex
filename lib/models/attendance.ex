@@ -9,15 +9,15 @@ defmodule Osdi.Attendance do
 
   @derive {Poison.Encoder, only: @base_attrs}
   schema "attendances" do
-    field :origin_system, :string
-    field :action_date, :utc_datetime
-    field :status, :string
-    field :attended, :boolean
+    field(:origin_system, :string)
+    field(:action_date, :utc_datetime)
+    field(:status, :string)
+    field(:attended, :boolean)
 
-    embeds_one :referrer_data, Osdi.ReferrerData
+    embeds_one(:referrer_data, Osdi.ReferrerData)
 
-    belongs_to :person, Osdi.Person
-    belongs_to :event, Osdi.Event
+    belongs_to(:person, Osdi.Person)
+    belongs_to(:event, Osdi.Event)
 
     timestamps()
   end
@@ -31,17 +31,26 @@ defmodule Osdi.Attendance do
   end
 
   def push(event_id, person, referrer_data \\ nil) do
-    %{given_name: first_name, family_name: last_name, email_address: email_address,
-      phone_number: phone_number, postal_address: postal_address} = person
+    %{
+      given_name: first_name,
+      family_name: last_name,
+      email_address: email_address,
+      phone_number: phone_number,
+      postal_address: postal_address
+    } = person
 
-    %{id: person_id} = person = Osdi.Person.push(%{given_name: first_name, family_name: last_name,
-      email_addresses: [%{address: email_address, primary: true}],
-      phone_numbers: [%{number: phone_number, primary: true}],
-      postal_addresses: [postal_address] |> Enum.map(&Address.get_or_insert/1)
-    })
+    %{id: person_id} =
+      person =
+      Osdi.Person.push(%{
+        given_name: first_name,
+        family_name: last_name,
+        email_addresses: [%{address: email_address, primary: true}],
+        phone_numbers: [%{number: phone_number, primary: true}],
+        postal_addresses: [postal_address] |> Enum.map(&Address.get_or_insert/1)
+      })
 
     existing =
-      (from a in Osdi.Attendance, where: a.event_id == ^event_id and a.person_id == ^person_id)
+      from(a in Osdi.Attendance, where: a.event_id == ^event_id and a.person_id == ^person_id)
       |> Repo.all()
       |> List.first()
 
@@ -50,10 +59,17 @@ defmodule Osdi.Attendance do
         event = Repo.get(Event, event_id)
 
         %Osdi.Attendance{}
-        |> changeset(%{referrer_data: referrer_data, action_date: DateTime.utc_now(), status: "accepted", person: person, event: event})
+        |> changeset(%{
+             referrer_data: referrer_data,
+             action_date: DateTime.utc_now(),
+             status: "accepted",
+             person: person,
+             event: event
+           })
         |> Repo.insert!()
 
-      attendance -> attendance
+      attendance ->
+        attendance
     end
   end
 end

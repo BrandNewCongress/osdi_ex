@@ -3,9 +3,9 @@ defmodule Osdi.Recipient do
   import Ecto.Changeset
 
   embedded_schema do
-    field :display_name, :string
-    field :legal_name, :string
-    field :amount, :float
+    field(:display_name, :string)
+    field(:legal_name, :string)
+    field(:amount, :float)
   end
 
   def changeset(recipient, params \\ %{}) do

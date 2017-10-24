@@ -5,20 +5,33 @@ defmodule EventTest do
   alias Osdi.{Repo, Person, Event}
 
   def create_fake_event do
-    [organizer, creator] = Repo.all(Person) |> Repo.preload(~w(phone_numbers email_addresses)a) |> Enum.take(2)
+    [organizer, creator] =
+      Repo.all(Person) |> Repo.preload(~w(phone_numbers email_addresses)a) |> Enum.take(2)
+
     event = %Event{}
 
     [event_name, title, description, summary, browser_url, type, featured_image_url] =
-      [Faker.Code.iban(), Faker.Beer.style(), Faker.Beer.yeast(), Faker.Beer.malt(),
-       Faker.Internet.url(), "Phonebank", Faker.Internet.url()]
+      [
+        Faker.Code.iban(),
+        Faker.Beer.style(),
+        Faker.Beer.yeast(),
+        Faker.Beer.malt(),
+        Faker.Internet.url(),
+        "Phonebank",
+        Faker.Internet.url()
+      ]
 
     start_date = DateTime.utc_now() |> Timex.shift(days: 4)
     end_date = DateTime.utc_now() |> Timex.shift(days: 4, hours: 4)
 
     tags = ~w(one two three)
 
-    location = %{locality: Faker.Company.bs(), venue: Faker.Beer.malt(), time_zone: "America/New_York",
-      address_lines: [Faker.Company.bs()]}
+    location = %{
+      locality: Faker.Company.bs(),
+      venue: Faker.Beer.malt(),
+      time_zone: "America/New_York",
+      address_lines: [Faker.Company.bs()]
+    }
 
     name = "#{organizer.given_name} #{organizer.family_name}"
     phone_number = organizer.phone_numbers |> List.first() |> Map.get(:number)

@@ -7,11 +7,11 @@ defmodule Osdi.ScriptQuestion do
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "script_questions" do
-    field :identifiers, {:array, :string}
-    field :sequence, :integer
+    field(:identifiers, {:array, :string})
+    field(:sequence, :integer)
 
-    belongs_to :question, Osdi.Question
-    belongs_to :script, Osdi.Script
+    belongs_to(:question, Osdi.Question)
+    belongs_to(:script, Osdi.Script)
 
     timestamps()
   end

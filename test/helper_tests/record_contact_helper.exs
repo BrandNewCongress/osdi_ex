@@ -3,7 +3,7 @@ defmodule RecordContactHelperTest do
   alias Osdi.{Repo, RecordContact, Contact, Person}
 
   test "record contact helper" do
-    [target, contactor] = Repo.all(from p in Person, limit: 2, select: p.id)
+    [target, contactor] = Repo.all(from(p in Person, limit: 2, select: p.id))
 
     body = %{
       contact: %{

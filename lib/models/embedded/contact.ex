@@ -3,11 +3,11 @@ defmodule Osdi.ContactInfo do
   import Ecto.Changeset
 
   embedded_schema do
-    field :name, :string
-    field :phone_number, :string
-    field :email_address, :string
-    field :additional_info, :string
-    field :public, :boolean, default: true
+    field(:name, :string)
+    field(:phone_number, :string)
+    field(:email_address, :string)
+    field(:additional_info, :string)
+    field(:public, :boolean, default: true)
   end
 
   def changeset(contact, params \\ %{}) do

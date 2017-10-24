@@ -10,18 +10,18 @@ defmodule Osdi.PhoneNumber do
 
   @derive {Poison.Encoder, only: @base_attrs}
   schema "phone_numbers" do
-    field :primary, :boolean
-    field :number, :string
-    field :extension, :string
-    field :description, :string
-    field :number_type, :string
-    field :operator, :string
-    field :country, :string
-    field :sms_capable, :boolean
-    field :do_not_call, :boolean
-    field :twilio_lookup_result, :map
+    field(:primary, :boolean)
+    field(:number, :string)
+    field(:extension, :string)
+    field(:description, :string)
+    field(:number_type, :string)
+    field(:operator, :string)
+    field(:country, :string)
+    field(:sms_capable, :boolean)
+    field(:do_not_call, :boolean)
+    field(:twilio_lookup_result, :map)
 
-    many_to_many :people, Osdi.Person, join_through: "people_phones"
+    many_to_many(:people, Osdi.Person, join_through: "people_phones")
 
     timestamps()
   end
@@ -36,14 +36,15 @@ defmodule Osdi.PhoneNumber do
     |> Map.take(@base_attrs)
     |> (fn pn -> struct(Osdi.PhoneNumber, pn) end).()
     |> Repo.insert!(
-      on_conflict: [set:
-        phone_number
-        |> Map.from_struct()
-        |> Map.take(~w(do_not_call sms_capable twilio_lookup_result)a)
-        |> Enum.filter(fn {_key, value} -> value != nil end)
-        |> Enum.into([number: phone_number.number])
-      ],
-      conflict_target: :number)
+         on_conflict: [
+           set: phone_number
+                |> Map.from_struct()
+                |> Map.take(~w(do_not_call sms_capable twilio_lookup_result)a)
+                |> Enum.filter(fn {_key, value} -> value != nil end)
+                |> Enum.into(number: phone_number.number)
+         ],
+         conflict_target: :number
+       )
   end
 
   def get_or_insert(phone_number) do
@@ -55,13 +56,20 @@ defmodule Osdi.PhoneNumber do
   def is_probably_fake?(number) do
     cond do
       # All one or two numbers
-      length(number |> String.to_charlist() |> Enum.uniq()) < 4 -> true
+      length(number |> String.to_charlist() |> Enum.uniq()) < 4 ->
+        true
+
       # Some letters
-      has_alpha?(number) -> true
+      has_alpha?(number) ->
+        true
+
       # Too short
-      String.length(number) < 6 -> true
+      String.length(number) < 6 ->
+        true
+
       # We're good
-      true -> false
+      true ->
+        false
     end
   end
 

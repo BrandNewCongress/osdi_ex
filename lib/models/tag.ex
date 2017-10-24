@@ -8,12 +8,12 @@ defmodule Osdi.Tag do
 
   @derive {Poison.Encoder, only: @base_attrs}
   schema "tags" do
-    field :name, :string
-    field :origin_system, :string
-    field :description, :string
+    field(:name, :string)
+    field(:origin_system, :string)
+    field(:description, :string)
 
-    has_many :taggings, Osdi.Tagging
-    many_to_many :people, Osdi.Person, join_through: Osdi.Tagging
+    has_many(:taggings, Osdi.Tagging)
+    many_to_many(:people, Osdi.Person, join_through: Osdi.Tagging)
 
     timestamps()
   end
@@ -30,25 +30,27 @@ defmodule Osdi.Tag do
   end
 
   def get_or_insert(name) do
-    Repo.insert! %Osdi.Tag{name: name},
+    Repo.insert!(
+      %Osdi.Tag{name: name},
       on_conflict: [set: [name: name]],
       conflict_target: :name
+    )
   end
 
   def get_or_insert_all(tags) do
     if tags |> List.first() |> is_binary() do
-      as_maps = Enum.map tags, &(%{name: &1, inserted_at: Timex.now(), updated_at: Timex.now()})
-      Repo.insert_all Osdi.Tag, as_maps, on_conflict: :nothing
-      Repo.all from t in Osdi.Tag, where: t.name in ^tags
+      as_maps = Enum.map(tags, &%{name: &1, inserted_at: Timex.now(), updated_at: Timex.now()})
+      Repo.insert_all(Osdi.Tag, as_maps, on_conflict: :nothing)
+      Repo.all(from(t in Osdi.Tag, where: t.name in ^tags))
     else
-      name_list = Enum.map tags, &(&1.name)
-      Repo.insert_all Osdi.Tag, tags, on_conflict: :nothing
-      Repo.all from t in Osdi.Tag, where: t.name in ^name_list
+      name_list = Enum.map(tags, & &1.name)
+      Repo.insert_all(Osdi.Tag, tags, on_conflict: :nothing)
+      Repo.all(from(t in Osdi.Tag, where: t.name in ^name_list))
     end
   end
 
   def ensure(tag_string) do
-    query = from t in Osdi.Tag, where: t.name == ^tag_string
+    query = from(t in Osdi.Tag, where: t.name == ^tag_string)
 
     case Repo.one(query) do
       nil ->
@@ -57,7 +59,8 @@ defmodule Osdi.Tag do
         |> Tuple.to_list()
         |> List.last()
 
-      tag -> tag
+      tag ->
+        tag
     end
   end
 end

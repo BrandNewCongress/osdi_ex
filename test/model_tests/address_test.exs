@@ -33,7 +33,9 @@ defmodule AddressTest do
     address = %{id: id, location: old_geo_point} = Repo.insert!(test_address)
 
     new_coordinates = {32, 80}
-    %{id: updated_id, location: new_geo_point} = Address.update_coordinates(address, new_coordinates)
+
+    %{id: updated_id, location: new_geo_point} =
+      Address.update_coordinates(address, new_coordinates)
 
     %{coordinates: {old_x, _}} = old_geo_point
     %{coordinates: {new_x, _}} = new_geo_point

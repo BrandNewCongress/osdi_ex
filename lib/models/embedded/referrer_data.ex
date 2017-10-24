@@ -3,10 +3,10 @@ defmodule Osdi.ReferrerData do
   import Ecto.Changeset
 
   embedded_schema do
-    field :source, :string
-    field :referrer, :string
-    field :website,	:string
-    field :url, :string
+    field(:source, :string)
+    field(:referrer, :string)
+    field(:website, :string)
+    field(:url, :string)
   end
 
   def changeset(referrer_data, params \\ %{}) do

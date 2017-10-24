@@ -7,21 +7,21 @@ defmodule Osdi.Donation do
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "donations" do
-    field :identifiers, {:array, :string}
-    field :origin_system, :string
-    field :action_date, :utc_datetime
-    field :amount, :float
-    field :voided, :boolean
-    field :voided_date, :utc_datetime
-    field :url, :string
+    field(:identifiers, {:array, :string})
+    field(:origin_system, :string)
+    field(:action_date, :utc_datetime)
+    field(:amount, :float)
+    field(:voided, :boolean)
+    field(:voided_date, :utc_datetime)
+    field(:url, :string)
 
-    embeds_one :payment, Osdi.Payment
+    embeds_one(:payment, Osdi.Payment)
 
-    embeds_one :referrer_data, Osdi.ReferrerData
-    embeds_many :recipients, Osdi.Recipient
+    embeds_one(:referrer_data, Osdi.ReferrerData)
+    embeds_many(:recipients, Osdi.Recipient)
 
-    belongs_to :person, Osdi.Person
-    belongs_to :fundraising_page, Osdi.FundraisingPage
+    belongs_to(:person, Osdi.Person)
+    belongs_to(:fundraising_page, Osdi.FundraisingPage)
 
     timestamps()
   end

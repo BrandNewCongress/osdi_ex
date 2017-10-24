@@ -7,12 +7,12 @@ defmodule Osdi.EmailAddress do
 
   @derive {Poison.Encoder, only: @base_attrs}
   schema "email_addresses" do
-    field :primary, :boolean
-    field :address, :string
-    field :address_type, :string
-    field :status, :string, default: "subscribed"
+    field(:primary, :boolean)
+    field(:address, :string)
+    field(:address_type, :string)
+    field(:status, :string, default: "subscribed")
 
-    many_to_many :people, Osdi.Person, join_through: "people_emails"
+    many_to_many(:people, Osdi.Person, join_through: "people_emails")
 
     timestamps()
   end
@@ -28,8 +28,9 @@ defmodule Osdi.EmailAddress do
     |> Map.take(@base_attrs)
     |> (fn pn -> struct(Osdi.EmailAddress, pn) end).()
     |> Repo.insert!(
-        on_conflict: [set: [address: email_address.address]],
-        conflict_target: :address)
+         on_conflict: [set: [address: email_address.address]],
+         conflict_target: :address
+       )
   end
 
   def get_or_insert(email_address) do

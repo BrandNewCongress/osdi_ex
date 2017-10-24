@@ -9,15 +9,15 @@ defmodule Osdi.Address do
   )a
 
   schema "addresses" do
-    field :venue, :string
-    field :address_lines, {:array, :string}
-    field :locality, :string
-    field :region, :string
-    field :postal_code, :string
-    field :country, :string, default: "United States of America"
-    field :time_zone, :string
-    field :public, :boolean
-    field :location, Geo.Point
+    field(:venue, :string)
+    field(:address_lines, {:array, :string})
+    field(:locality, :string)
+    field(:region, :string)
+    field(:postal_code, :string)
+    field(:country, :string, default: "United States of America")
+    field(:time_zone, :string)
+    field(:public, :boolean)
+    field(:location, Geo.Point)
 
     timestamps()
   end
@@ -34,7 +34,9 @@ defmodule Osdi.Address do
     def encode(address, options) do
       address
       |> Osdi.Address.encode_model()
-      |> Map.take(~w(venue address_lines locality region postal_code country time_zone location public)a)
+      |> Map.take(
+           ~w(venue address_lines locality region postal_code country time_zone location public)a
+         )
       |> Poison.Encoder.Map.encode(options)
     end
   end
@@ -44,20 +46,24 @@ defmodule Osdi.Address do
     |> cast(params, @base_attrs)
   end
 
-  def get_or_insert(address =
-    %Osdi.Address{address_lines: address_lines, locality: locality,
-                  region: region}) when is_list(address_lines) and not is_nil(region) do
+  def get_or_insert(
+        address = %Osdi.Address{address_lines: address_lines, locality: locality, region: region}
+      )
+      when is_list(address_lines) and not is_nil(region) do
+    address_line_zero =
+      case address_lines do
+        nil -> nil
+        list -> list |> List.first()
+      end
 
-    address_line_zero = case address_lines do
-      nil -> nil
-      list -> list |> List.first()
-    end
-
-    matches = Osdi.Repo.all(
-      from a in Osdi.Address,
-        where: ^address_line_zero in a.address_lines and
-               a.locality == ^locality and
-               a.region == ^region)
+    matches =
+      Osdi.Repo.all(
+        from(
+          a in Osdi.Address,
+          where: ^address_line_zero in a.address_lines and a.locality == ^locality and
+            a.region == ^region
+        )
+      )
 
     existing =
       matches

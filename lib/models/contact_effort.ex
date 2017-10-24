@@ -7,21 +7,21 @@ defmodule Osdi.ContactEffort do
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "contacts" do
-    field :identifiers, {:array, :string}
-    field :origin_sytem, :string
-    field :name, :string
-    field :title, :string
-    field :description, :string
-    field :summary, :string
-    field :start_date, :utc_datetime
-    field :end_date, :utc_datetime
-    field :type, :string
+    field(:identifiers, {:array, :string})
+    field(:origin_sytem, :string)
+    field(:name, :string)
+    field(:title, :string)
+    field(:description, :string)
+    field(:summary, :string)
+    field(:start_date, :utc_datetime)
+    field(:end_date, :utc_datetime)
+    field(:type, :string)
 
-    belongs_to :creator, Osdi.Person
-    belongs_to :modified_by, Osdi.Person
+    belongs_to(:creator, Osdi.Person)
+    belongs_to(:modified_by, Osdi.Person)
 
-    has_many :contacts, Osdi.Contact
-    has_one :script, Osdi.Script
+    has_many(:contacts, Osdi.Contact)
+    has_one(:script, Osdi.Script)
 
     timestamps()
   end

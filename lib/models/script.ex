@@ -7,17 +7,17 @@ defmodule Osdi.Script do
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "scripts" do
-    field :identifiers, {:array, :string}
-    field :origin_sytem, :string
-    field :title, :string
-    field :description, :string
-    field :summary, :string
+    field(:identifiers, {:array, :string})
+    field(:origin_sytem, :string)
+    field(:title, :string)
+    field(:description, :string)
+    field(:summary, :string)
 
-    belongs_to :creator, Osdi.Person
-    belongs_to :modified_by, Osdi.Person
-    belongs_to :contact_effort, Osdi.ContactEffort
+    belongs_to(:creator, Osdi.Person)
+    belongs_to(:modified_by, Osdi.Person)
+    belongs_to(:contact_effort, Osdi.ContactEffort)
 
-    has_many :script_questions, Osdi.ScriptQuestion
+    has_many(:script_questions, Osdi.ScriptQuestion)
 
     timestamps()
   end

@@ -7,19 +7,19 @@ defmodule Osdi.Question do
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations}
   schema "questions" do
-    field :identifiers, {:array, :string}
-    field :origin_system, :string
-    field :title, :string
-    field :description, :string
-    field :summary, :string
-    field :question_type, :string
+    field(:identifiers, {:array, :string})
+    field(:origin_system, :string)
+    field(:title, :string)
+    field(:description, :string)
+    field(:summary, :string)
+    field(:question_type, :string)
 
-    embeds_many :responses, Osdi.Response
+    embeds_many(:responses, Osdi.Response)
 
-    belongs_to :creator, Osdi.Person
-    belongs_to :modified_by, Osdi.Person
+    belongs_to(:creator, Osdi.Person)
+    belongs_to(:modified_by, Osdi.Person)
 
-    has_many :answers, Osdi.Answer
+    has_many(:answers, Osdi.Answer)
 
     timestamps()
   end

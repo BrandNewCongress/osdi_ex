@@ -3,9 +3,9 @@ defmodule Osdi.Profile do
   import Ecto.Changeset
 
   embedded_schema do
-    field :provider, :string
-    field :url, :string
-    field :handle, :string
+    field(:provider, :string)
+    field(:url, :string)
+    field(:handle, :string)
   end
 
   def changeset(profile, params \\ %{}) do

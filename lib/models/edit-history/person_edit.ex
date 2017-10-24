@@ -7,10 +7,10 @@ defmodule Osdi.PersonEdit do
 
   @derive {Poison.Encoder, only: @base_attrs}
   schema "admin_history" do
-    field :actor, :string
-    field :edit, :map
+    field(:actor, :string)
+    field(:edit, :map)
 
-    belongs_to :person, Osdi.Person
+    belongs_to(:person, Osdi.Person)
 
     timestamps()
   end
@@ -18,10 +18,12 @@ defmodule Osdi.PersonEdit do
   def edits_by_within_for(actor, duration = %Timex.Duration{}, person_id) do
     since = Timex.now() |> Timex.subtract(duration)
 
-    Repo.all(from pe in Osdi.PersonEdit,
-      where: pe.actor == ^actor
-        and pe.inserted_at > ^since
-        and pe.person_id == ^person_id,
-      select: pe.edit)
+    Repo.all(
+      from(
+        pe in Osdi.PersonEdit,
+        where: pe.actor == ^actor and pe.inserted_at > ^since and pe.person_id == ^person_id,
+        select: pe.edit
+      )
+    )
   end
 end

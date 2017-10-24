@@ -17,28 +17,28 @@ defmodule Osdi.Event do
 
   @derive {Poison.Encoder, only: @base_attrs ++ @associations ++ @embeds}
   schema "events" do
-    field :identifiers, {:array, :string}
-    field :name, :string
-    field :title, :string
-    field :description, :string
-    field :summary, :string
-    field :instructions, :string
-    field :browser_url, :string
-    field :type, :string
-    field :status, :string
-    field :featured_image_url, :string
-    field :start_date, :utc_datetime
-    field :end_date, :utc_datetime
+    field(:identifiers, {:array, :string})
+    field(:name, :string)
+    field(:title, :string)
+    field(:description, :string)
+    field(:summary, :string)
+    field(:instructions, :string)
+    field(:browser_url, :string)
+    field(:type, :string)
+    field(:status, :string)
+    field(:featured_image_url, :string)
+    field(:start_date, :utc_datetime)
+    field(:end_date, :utc_datetime)
 
-    embeds_one :contact, Osdi.ContactInfo
+    embeds_one(:contact, Osdi.ContactInfo)
 
-    belongs_to :creator, Osdi.Person
-    belongs_to :organizer, Osdi.Person
-    belongs_to :modified_by, Osdi.Person
-    belongs_to :location, Osdi.Address, foreign_key: :address_id
+    belongs_to(:creator, Osdi.Person)
+    belongs_to(:organizer, Osdi.Person)
+    belongs_to(:modified_by, Osdi.Person)
+    belongs_to(:location, Osdi.Address, foreign_key: :address_id)
 
-    has_many :attendances, Osdi.Attendance
-    many_to_many :tags, Osdi.Tag, join_through: "event_taggings", on_replace: :delete
+    has_many(:attendances, Osdi.Attendance)
+    many_to_many(:tags, Osdi.Tag, join_through: "event_taggings", on_replace: :delete)
 
     timestamps()
   end
@@ -54,7 +54,7 @@ defmodule Osdi.Event do
   end
 
   def add_tags(event = %Osdi.Event{tags: current_tags}, tags) when is_list(current_tags) do
-    current_tagstrings = current_tags |> Enum.map(&(&1.name))
+    current_tagstrings = current_tags |> Enum.map(& &1.name)
 
     records =
       tags
@@ -76,7 +76,7 @@ defmodule Osdi.Event do
   def remove_tags(event = %Osdi.Event{}, tags) do
     records =
       event.tags
-      |> Enum.map(&(&1.name))
+      |> Enum.map(& &1.name)
       |> Enum.reject(fn tag -> Enum.member?(tags, tag) end)
       |> Tag.get_or_insert_all()
 
@@ -96,7 +96,14 @@ defmodule Osdi.Event do
   def slug_for(title, date) do
     to_replace = ~r/[ \t+,]+/
     title_part = title |> String.downcase() |> String.replace(to_replace, "-", global: true)
-    date_part = date |> DateTime.to_date() |> Date.to_string |> String.split("-") |> Enum.slice(1..3) |> Enum.join("-")
+
+    date_part =
+      date
+      |> DateTime.to_date()
+      |> Date.to_string()
+      |> String.split("-")
+      |> Enum.slice(1..3)
+      |> Enum.join("-")
 
     "#{title_part}-#{date_part}"
   end
