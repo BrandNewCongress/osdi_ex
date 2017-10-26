@@ -31,23 +31,7 @@ defmodule Osdi.Attendance do
   end
 
   def push(event_id, person, referrer_data \\ nil) do
-    %{
-      given_name: first_name,
-      family_name: last_name,
-      email_address: email_address,
-      phone_number: phone_number,
-      postal_address: postal_address
-    } = person
-
-    %{id: person_id} =
-      person =
-      Osdi.Person.push(%{
-        given_name: first_name,
-        family_name: last_name,
-        email_addresses: [%{address: email_address, primary: true}],
-        phone_numbers: [%{number: phone_number, primary: true}],
-        postal_addresses: [postal_address] |> Enum.map(&Address.get_or_insert/1)
-      })
+    %{id: person_id} = person = Osdi.Person.push(person)
 
     existing =
       from(a in Osdi.Attendance, where: a.event_id == ^event_id and a.person_id == ^person_id)
