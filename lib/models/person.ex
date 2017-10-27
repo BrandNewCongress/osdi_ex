@@ -71,7 +71,7 @@ defmodule Osdi.Person do
     params =
       Enum.reduce(
         [
-          {:email_address, EmailAddress},
+          {:email_addresses, EmailAddress},
           {:phone_numbers, PhoneNumber},
           {:postal_addresses, Address}
         ],
