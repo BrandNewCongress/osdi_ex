@@ -18,6 +18,8 @@ defmodule Osdi.Repo.Migrations.AddFundraisingPage do
       timestamps()
     end
 
+    create unique_index(:fundraising_pages, [:name])
+
     alter table(:donations) do
       add :fundraising_page_id, references(:fundraising_pages)
     end

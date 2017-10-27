@@ -50,7 +50,6 @@ defmodule Osdi.Address do
         address = %Osdi.Address{address_lines: address_lines, locality: locality, region: region}
       )
       when is_list(address_lines) and not is_nil(region) do
-
     address_line_zero =
       case address_lines do
         nil -> nil
