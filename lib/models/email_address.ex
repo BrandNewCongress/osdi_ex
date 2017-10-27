@@ -26,9 +26,9 @@ defmodule Osdi.EmailAddress do
   def get_or_insert(email_address = %Osdi.EmailAddress{}) do
     email_address
     |> Map.take(@base_attrs)
-    |> (fn pn -> struct(Osdi.EmailAddress, pn) end).()
+    |> (fn em -> struct(Osdi.EmailAddress, em) end).()
     |> Repo.insert!(
-         on_conflict: [set: [address: email_address.address]],
+         on_conflict: [set: [primary: email_address.primary]],
          conflict_target: :address
        )
   end
