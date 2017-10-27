@@ -1,4 +1,5 @@
 defmodule Osdi.Payment do
+  import Ecto.Changeset
   use Ecto.Schema
 
   @base_attrs ~w(method reference_number authorization_stored)a
