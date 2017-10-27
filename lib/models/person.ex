@@ -175,6 +175,9 @@ defmodule Osdi.Person do
 
   defp get_emails(_else), do: []
 
+  defp get_addresses(%{postal_address: single_address}), do: [single_address]
+  defp get_addresses(%{postal_addresses: addresses}), do: addresses
+
   @doc """
   Matches person and joins email addresses and phone numbers
   Overwrites name and all other simple person fields
@@ -199,7 +202,8 @@ defmodule Osdi.Person do
           as_map
           |> Map.put(:email_addresses, as_map |> get_emails() |> Enum.map(&%{address: &1}))
           |> Map.put(:phone_numbers, as_map |> get_numbers() |> Enum.map(&%{number: &1}))
-          |> Map.drop([:email_address, :phone_number])
+          |> Map.put(:postal_addresses, as_map |> get_addresses())
+          |> Map.drop([:email_address, :phone_number, :postal_address])
 
         result =
           %Osdi.Person{}
