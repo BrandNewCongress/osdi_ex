@@ -177,6 +177,7 @@ defmodule Osdi.Person do
 
   defp get_addresses(%{postal_address: single_address}), do: [single_address]
   defp get_addresses(%{postal_addresses: addresses}), do: addresses
+  defp get_addresses(_else), do: []
 
   @doc """
   Matches person and joins email addresses and phone numbers
