@@ -46,13 +46,8 @@ defmodule Osdi.Address do
     |> cast(params, @base_attrs)
   end
 
-  def get_or_insert(address = %Osdi.Address{address_lines: address_lines})
-      when is_list(address_lines) do
-    address_line_zero =
-      case address_lines do
-        nil -> nil
-        list -> list |> List.first()
-      end
+  def get_or_insert(address = %Osdi.Address{address_lines: [address_line_zero]})
+      when not is_nil(address_line_zero) do
 
     query = dynamic([a], ^address_line_zero in a.address_lines)
 

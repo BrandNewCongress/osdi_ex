@@ -227,10 +227,10 @@ defmodule Osdi.Person do
               PhoneNumber,
               &if(PhoneNumber.is_probably_fake?(&1.number), do: :rand.uniform(), else: &1.number)
             },
-            {:tags, Tag, & &1.name}
+            {:tags, Tag, & &1.name},
+            {:postal_addresses, Address, & &1.postal_code}
           ]
           |> Enum.map(generate_combiner(person, existing))
-          |> combine_addresses(existing)
           |> Enum.reduce(existing, fn {key, val}, acc -> Map.put(acc, key, val) end)
           |> Map.put(
                :identifiers,
@@ -285,10 +285,11 @@ defmodule Osdi.Person do
   defp ensure_tags(person = %Osdi.Person{tags: current_tags}) when is_list(current_tags),
     do: person
 
-  defp ensure_tags(_person = %Osdi.Person{id: id}),
-    do: Osdi.Person
-        |> Repo.get(id)
-        |> Repo.preload(:tags)
+  defp ensure_tags(_person = %Osdi.Person{id: id}) do
+    Osdi.Person
+    |> Repo.get(id)
+    |> Repo.preload(:tags)
+  end
 
   def add_tags(person_maybe_tags, tags) do
     person = %Osdi.Person{tags: current_tags} = ensure_tags(person_maybe_tags)
