@@ -88,8 +88,6 @@ defmodule Osdi.Address do
       |> Enum.take(1)
       |> List.first()
 
-    IO.inspect(existing)
-
     case existing do
       nil -> Osdi.Repo.insert!(address)
       found -> found
