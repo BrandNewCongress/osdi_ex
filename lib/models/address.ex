@@ -56,10 +56,6 @@ defmodule Osdi.Address do
 
     query = dynamic([a], ^address_line_zero in a.address_lines)
 
-    no_conflicts =
-      Map.take(address, ~w(locality region postal_code)a)
-      |> Enum.filter(fn {_key, val} -> val != nil end)
-
     query =
       case address.locality do
         nil -> query

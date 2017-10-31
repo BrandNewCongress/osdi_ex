@@ -2,10 +2,10 @@ defmodule Osdi.Attendance do
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query
-  alias Osdi.{Repo, Address, Event}
+  alias Osdi.{Repo, Event}
 
   @base_attrs ~w(origin_system action_date status attended)a
-  @associations ~w(person event)a
+  # @associations ~w(person event)a
 
   @derive {Poison.Encoder, only: @base_attrs}
   schema "attendances" do
