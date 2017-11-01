@@ -301,7 +301,7 @@ defmodule Osdi.Person do
       |> Tag.get_or_insert_all()
 
     person
-    |> change(tags: records)
+    |> change(tags: records, updated_at: DateTime.utc_now())
     |> Repo.update!()
   end
 
@@ -315,7 +315,7 @@ defmodule Osdi.Person do
       |> Tag.get_or_insert_all()
 
     person
-    |> change(tags: records)
+    |> change(tags: records, updated_at: DateTime.utc_now())
     |> Repo.update!()
   end
 end
