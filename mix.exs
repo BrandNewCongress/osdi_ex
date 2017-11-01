@@ -27,7 +27,7 @@ defmodule Osdi.Mixfile do
       {:poison, "~> 3.1"},
       {:timex, "~> 3.0"},
       {:faker, "~> 0.8"},
-      {:shorter_maps, "~> 2.0"},
+      {:shorter_maps, "~> 2.0", only: [:test]},
       {:ecto_enum, "~> 1.0.2", override: true},
       {:apex, "~>1.0.0"},
       {:remodel, "~> 0.0.4"},
