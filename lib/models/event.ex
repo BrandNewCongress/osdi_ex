@@ -94,8 +94,10 @@ defmodule Osdi.Event do
   end
 
   def slug_for(title, date) do
-    to_replace = ~r/[ \t+,]+/
-    title_part = title |> String.downcase() |> String.replace(to_replace, "-", global: true)
+    to_replace = ~r/[ \t+,\(\)\\\+=:\?@&=$]+/
+
+    title_part =
+      title |> String.downcase() |> String.replace(to_replace, "-", global: true) |> URI.encode()
 
     date_part =
       date
